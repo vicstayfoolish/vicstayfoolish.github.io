@@ -12,12 +12,11 @@ interface Category {
   // pages: CollectionEntry<"psychology" | "health" | "pets" | "technology">[]; // REMOVED
 }
 
-const categoriesData: { id: string; name: string; icon: string; path: string }[] = [
-  { id: "psychology", name: "心理學", icon: "brain", path: "/knowledge/psychology" },
-  { id: "health", name: "健康", icon: "heartbeat", path: "/knowledge/health" },
-  { id: "pets", name: "寵物", icon: "paw", path: "/knowledge/pets" },
-  { id: "technology", name: "科技", icon: "microchip", path: "/knowledge/technology" },
-  { id: "others", name: "其他", icon: "ellipsis-h", path: "/knowledge/others" }, // 新增 others 分類
+const categoriesData: { id: string; name: string; icon: string }[] = [
+  { id: "psychology", name: "心理學", icon: "brain" },
+  { id: "health", name: "健康", icon: "heartbeat" },
+  { id: "technology", name: "科技", icon: "microchip" },
+  { id: "others", name: "其他", icon: "ellipsis-h" },
 ];
 
 // 用於保存最新文章
@@ -26,7 +25,10 @@ let allKnowledgeArticles: CollectionEntry<"knowledge">[] = [];
 
 // 加載內容頁面
 try {
-  allKnowledgeArticles = await getCollection("knowledge", ({ data }) => !data.draft);
+  allKnowledgeArticles = await getCollection(
+    "knowledge",
+    ({ data }) => !data.draft && !data.hidden
+  );
 
   // 按發布日期排序最新文章
   latestArticles = [...allKnowledgeArticles] // 創建副本以避免修改原始陣列
@@ -88,20 +90,13 @@ function formatDate(date: Date | string | undefined): string {
     <div class="absolute inset-0 bg-pattern opacity-10"></div>
 
     <div class="container mx-auto text-center relative z-10">
-      <div class="inline-block mb-4 p-2 rounded-full bg-white/20 backdrop-blur-sm">
-        <span
-          class="px-4 py-1.5 rounded-full text-sm font-medium bg-primary-accent/90 text-white shadow-sm"
-        >
-          知識方舟
-        </span>
-      </div>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-white tracking-tight">
-        探索 <span class="text-white">亮亮的知識方舟</span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white tracking-tight">
+        <span class="text-white">亮亮的知識方舟</span>
       </h1>
       <p
         class="text-lg sm:text-xl mb-6 max-w-3xl mx-auto leading-relaxed text-white/90 line-height-relaxed"
       >
-        這是一個分享知識與見解的空間，探索各種主題，尋找靈感，滋養心靈
+        心靈的綠洲、生活小知識、科技觀察與小撇步
       </p>
       <div class="flex flex-wrap justify-center gap-3">
         {
@@ -120,7 +115,7 @@ function formatDate(date: Date | string | undefined): string {
   </header>
 
   <main class="container mx-auto px-4 py-20">
-    <!-- 最新文章區塊 - 使用垂直條替代圓形圖標 -->
+    <!-- 最新文章區塊 - 動態輪播 -->
     {
       latestArticles.length > 0 && (
         <section class="latest-articles mb-28">
@@ -130,56 +125,287 @@ function formatDate(date: Date | string | undefined): string {
               <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">最新文章</h2>
             </div>
             <div class="flex-grow border-t border-slate-300 sm:ml-6" />
+            <div class="flex space-x-2 mt-4 sm:mt-0 sm:ml-4">
+              <button
+                id="prev-slide"
+                class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+              >
+                <i class="fas fa-chevron-left text-slate-600" />
+              </button>
+              <button
+                id="next-slide"
+                class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
+              >
+                <i class="fas fa-chevron-right text-slate-600" />
+              </button>
+            </div>
           </div>
 
-          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestArticles.map((article) => (
-              <a
-                href={`/knowledge/${article.slug}`}
-                class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
-              >
-                <div class="absolute inset-0 bg-white opacity-90 -z-10" />
-                <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+          <div class="carousel-container relative overflow-hidden rounded-xl">
+            <div
+              id="carousel"
+              class="carousel-track flex transition-transform duration-500 ease-in-out"
+            >
+              {latestArticles.map((article) => (
+                <div class="carousel-item w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3">
+                  <a
+                    href={`/knowledge/${article.slug}`}
+                    class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
+                  >
+                    <div class="absolute inset-0 bg-white opacity-90 -z-10" />
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
 
-                <div class="p-6 flex flex-col h-full">
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                      <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
-                        <i
-                          class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.data.category)} text-primary-accent`}
-                        />
+                    <div class="p-6 flex flex-col h-full">
+                      <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                          <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
+                            <i
+                              class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.data.category)} text-primary-accent`}
+                            />
+                          </div>
+                          <span class="card-badge">{article.data.tag}</span>
+                        </div>
+                        <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-main-text">
+                          {getCategoryName(article.data.category)}
+                        </span>
                       </div>
-                      <span class="card-badge">{article.data.tag}</span>
+
+                      <h3 class="text-xl font-semibold mb-3 text-main-text group-hover:text-primary-accent transition-colors">
+                        {article.data.title}
+                      </h3>
+
+                      <p class="text-secondary-text mb-4 flex-grow text-sm leading-relaxed line-clamp-3">
+                        {article.data.description}
+                      </p>
+
+                      <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-200">
+                        <span class="text-sm text-secondary-text">
+                          <i class="far fa-calendar-alt mr-1" />
+                          {formatDate(article.data.pubDate)}
+                        </span>
+                        <div class="btn-read-more">
+                          <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
                     </div>
-                    <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-main-text">
-                      {getCategoryName(article.data.category)}
-                    </span>
-                  </div>
-
-                  <h3 class="text-xl font-semibold mb-3 text-main-text group-hover:text-primary-accent transition-colors">
-                    {article.data.title}
-                  </h3>
-
-                  <p class="text-secondary-text mb-4 flex-grow text-sm leading-relaxed">
-                    {article.data.description}
-                  </p>
-
-                  <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-200">
-                    <span class="text-sm text-secondary-text">
-                      <i class="far fa-calendar-alt mr-1" />
-                      {formatDate(article.data.pubDate)}
-                    </span>
-                    <div class="btn-read-more">
-                      <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
+                  </a>
                 </div>
-              </a>
-            ))}
+              ))}
+            </div>
+
+            <div class="carousel-indicators flex justify-center mt-6 space-x-2">
+              {latestArticles.map((_, index) => (
+                <button
+                  class="carousel-dot w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors duration-300"
+                  data-index={index}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )
     }
+
+    {/* 三欄式分類展示 */}
+    <section class="featured-categories mb-28">
+      <div class="flex flex-col sm:flex-row sm:items-center mb-12">
+        <div class="flex items-center mb-4 sm:mb-0">
+          <div class="w-2 h-10 rounded-md bg-secondary-accent"></div>
+          <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">熱門分類</h2>
+        </div>
+        <div class="flex-grow border-t border-slate-300 sm:ml-6"></div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        {/* 心理學欄位 */}
+        <div
+          class="category-column group relative overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white border border-slate-200 p-6"
+        >
+          <div class="absolute inset-0 bg-white opacity-90 -z-10"></div>
+          <div
+            class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+          >
+          </div>
+
+          <div class="flex items-center mb-6">
+            <div
+              class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3"
+            >
+              <i class="fas fa-brain text-primary-accent"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-main-text">心理學</h3>
+          </div>
+
+          <div class="space-y-6">
+            {
+              allKnowledgeArticles
+                .filter((article) => article.data.category === "psychology")
+                .sort((a, b) => {
+                  const dateA =
+                    a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
+                  const dateB =
+                    b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
+                  return dateB.getTime() - dateA.getTime();
+                })
+                .slice(0, 3)
+                .map((article) => (
+                  <a
+                    href={`/knowledge/${article.slug}`}
+                    class="group block p-4 rounded-lg border border-slate-200 hover:border-primary-accent/30 hover:bg-slate-50 transition-all duration-300 hover:shadow-hover transform hover:-translate-y-1 hover:scale-[1.02] relative overflow-hidden"
+                  >
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    <div class="flex items-center mb-2">
+                      <span class="card-badge mr-2">{article.data.tag}</span>
+                      <span class="text-xs text-secondary-text">
+                        {formatDate(article.data.pubDate)}
+                      </span>
+                    </div>
+                    <h4 class="font-medium text-main-text hover:text-primary-accent transition-colors mb-2">
+                      {article.data.title}
+                    </h4>
+                    <p class="text-secondary-text text-sm line-clamp-2">
+                      {article.data.description}
+                    </p>
+                  </a>
+                ))
+            }
+            <a
+              href="#psychology"
+              class="inline-flex items-center text-sm text-primary-accent font-medium hover:underline mt-2"
+            >
+              查看更多 <i
+                class="fas fa-arrow-right text-xs ml-1 group-hover:translate-x-1 transition-transform"
+              ></i>
+            </a>
+          </div>
+        </div>
+
+        {/* 健康欄位 */}
+        <div
+          class="category-column group relative overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white border border-slate-200 p-6"
+        >
+          <div class="absolute inset-0 bg-white opacity-90 -z-10"></div>
+          <div
+            class="absolute -inset-0.5 bg-gradient-to-br from-rose-500/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+          >
+          </div>
+
+          <div class="flex items-center mb-6">
+            <div class="p-3 rounded-full bg-gradient-to-br from-rose-500/20 to-rose-500/10 mr-3">
+              <i class="fas fa-heartbeat text-rose-500"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-main-text">健康</h3>
+          </div>
+
+          <div class="space-y-6">
+            {
+              allKnowledgeArticles
+                .filter((article) => article.data.category === "health")
+                .sort((a, b) => {
+                  const dateA =
+                    a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
+                  const dateB =
+                    b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
+                  return dateB.getTime() - dateA.getTime();
+                })
+                .slice(0, 3)
+                .map((article) => (
+                  <a
+                    href={`/knowledge/${article.slug}`}
+                    class="group block p-4 rounded-lg border border-slate-200 hover:border-rose-400/30 hover:bg-slate-50 transition-all duration-300 hover:shadow-hover transform hover:-translate-y-1 hover:scale-[1.02] relative overflow-hidden"
+                  >
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-rose-500/5 to-secondary-accent/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    <div class="flex items-center mb-2">
+                      <span class="card-badge mr-2">{article.data.tag}</span>
+                      <span class="text-xs text-secondary-text">
+                        {formatDate(article.data.pubDate)}
+                      </span>
+                    </div>
+                    <h4 class="font-medium text-main-text hover:text-rose-500 transition-colors mb-2">
+                      {article.data.title}
+                    </h4>
+                    <p class="text-secondary-text text-sm line-clamp-2">
+                      {article.data.description}
+                    </p>
+                  </a>
+                ))
+            }
+            <a
+              href="#health"
+              class="inline-flex items-center text-sm text-rose-500 font-medium hover:underline mt-2"
+            >
+              查看更多 <i
+                class="fas fa-arrow-right text-xs ml-1 group-hover:translate-x-1 transition-transform"
+              ></i>
+            </a>
+          </div>
+        </div>
+
+        {/* 科技欄位 */}
+        <div
+          class="category-column group relative overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white border border-slate-200 p-6"
+        >
+          <div class="absolute inset-0 bg-white opacity-90 -z-10"></div>
+          <div
+            class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+          >
+          </div>
+
+          <div class="flex items-center mb-6">
+            <div
+              class="p-3 rounded-full bg-gradient-to-br from-indigo-500/20 to-indigo-500/10 mr-3"
+            >
+              <i class="fas fa-microchip text-indigo-500"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-main-text">科技</h3>
+          </div>
+
+          <div class="space-y-6">
+            {
+              allKnowledgeArticles
+                .filter((article) => article.data.category === "technology")
+                .sort((a, b) => {
+                  const dateA =
+                    a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
+                  const dateB =
+                    b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
+                  return dateB.getTime() - dateA.getTime();
+                })
+                .slice(0, 3)
+                .map((article) => (
+                  <a
+                    href={`/knowledge/${article.slug}`}
+                    class="group block p-4 rounded-lg border border-slate-200 hover:border-indigo-400/30 hover:bg-slate-50 transition-all duration-300 hover:shadow-hover transform hover:-translate-y-1 hover:scale-[1.02] relative overflow-hidden"
+                  >
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-indigo-500/5 to-secondary-accent/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    <div class="flex items-center mb-2">
+                      <span class="card-badge mr-2">{article.data.tag}</span>
+                      <span class="text-xs text-secondary-text">
+                        {formatDate(article.data.pubDate)}
+                      </span>
+                    </div>
+                    <h4 class="font-medium text-main-text hover:text-indigo-500 transition-colors mb-2">
+                      {article.data.title}
+                    </h4>
+                    <p class="text-secondary-text text-sm line-clamp-2">
+                      {article.data.description}
+                    </p>
+                  </a>
+                ))
+            }
+            <a
+              href="#technology"
+              class="inline-flex items-center text-sm text-indigo-500 font-medium hover:underline mt-2"
+            >
+              查看更多 <i
+                class="fas fa-arrow-right text-xs ml-1 group-hover:translate-x-1 transition-transform"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
     {/* 各分類區塊 - 標題風格統一 */}
     {
@@ -268,25 +494,38 @@ function formatDate(date: Date | string | undefined): string {
                   </a>
                 ))}
               </div>
-
-              {/* 查看更多按鈕 - 指向新的分類頁面路徑 */}
-              {allKnowledgeArticles.filter((art) => art.data.category === category.id).length >
-                6 && (
-                <div class="text-center mt-12">
-                  <a
-                    href={category.path}
-                    class="inline-block bg-primary-accent text-white font-medium py-3 px-8 rounded-lg hover:bg-primary-accent/90 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                  >
-                    探索更多 {category.name} 文章
-                    <i class="fas fa-arrow-right ml-2" />
-                  </a>
-                </div>
-              )}
             </div>
           </section>
         );
       })
     }
+
+    {/* 隱藏區塊入口 */}
+    <section class="hidden-section mb-16 text-center">
+      <a href="/hidden" class="relative inline-block group overflow-hidden">
+        <div
+          class="p-8 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-300"
+        >
+          <div class="flex flex-col items-center">
+            <div class="p-3 rounded-full bg-gray-200 mb-4">
+              <i class="fas fa-lock text-gray-500 group-hover:text-gray-700 transition-colors"></i>
+            </div>
+            <h3
+              class="text-xl font-semibold text-gray-500 group-hover:text-gray-800 transition-colors"
+            >
+              隱藏珍寶
+            </h3>
+            <p class="mt-2 text-sm text-gray-400 group-hover:text-gray-600 transition-colors">
+              只有知道密碼的人才能看到這裡的內容
+            </p>
+          </div>
+        </div>
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+        >
+        </div>
+      </a>
+    </section>
   </main>
 </MainLayout>
 
@@ -336,6 +575,44 @@ function formatDate(date: Date | string | undefined): string {
   :global(html) {
     scroll-behavior: smooth;
   }
+
+  /* 輪播樣式 */
+  .carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 0;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .carousel-item {
+    flex: 0 0 100%;
+    padding: 0 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .carousel-item {
+      flex: 0 0 50%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .carousel-item {
+      flex: 0 0 33.333333%;
+    }
+  }
+
+  .carousel-dot {
+    transition: all 0.3s ease;
+  }
+
+  .carousel-dot.active {
+    background-color: var(--color-primary-accent);
+    transform: scale(1.2);
+  }
 </style>
 
 <script>
@@ -360,5 +637,167 @@ function formatDate(date: Date | string | undefined): string {
         }
       });
     });
+
+    // 初始化輪播功能
+    initCarousel();
   });
+
+  // 輪播功能初始化
+  function initCarousel() {
+    const carousel = document.getElementById("carousel") as HTMLElement;
+    const prevButton = document.getElementById("prev-slide") as HTMLButtonElement;
+    const nextButton = document.getElementById("next-slide") as HTMLButtonElement;
+    const dots = document.querySelectorAll(".carousel-dot");
+    const items = document.querySelectorAll(".carousel-item");
+
+    if (!carousel || !prevButton || !nextButton || !dots.length || !items.length) return;
+
+    // 響應式設計：根據屏幕寬度確定顯示的卡片數量
+    let slidesToShow = 1; // 移動設備默認顯示1個
+    let currentIndex = 0;
+    let autoplayInterval: ReturnType<typeof setInterval> | null = null;
+
+    // 響應式調整
+    function updateSlidesToShow() {
+      const windowWidth = window.innerWidth;
+      if (windowWidth >= 1024) {
+        // lg
+        slidesToShow = 3;
+      } else if (windowWidth >= 768) {
+        // md
+        slidesToShow = 2;
+      } else {
+        slidesToShow = 1;
+      }
+
+      // 更新當前索引確保不超出範圍
+      currentIndex = Math.min(currentIndex, items.length - slidesToShow);
+      goToSlide(currentIndex);
+    }
+
+    // 初始設置
+    updateSlidesToShow();
+    updateActiveDot();
+
+    // 添加窗口大小變化監聽
+    window.addEventListener("resize", updateSlidesToShow);
+
+    // 設置輪播間隔（5秒自動切換）
+    startAutoplay();
+
+    // 啟動自動播放
+    function startAutoplay() {
+      stopAutoplay(); // 確保清除之前的定時器
+      autoplayInterval = setInterval(() => {
+        goToNextSlide();
+      }, 5000);
+    }
+
+    // 停止自動播放
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+      }
+    }
+
+    // 鼠標懸停時暫停自動播放
+    carousel.addEventListener("mouseenter", stopAutoplay);
+    carousel.addEventListener("mouseleave", startAutoplay);
+
+    // 更新輪播狀態
+    function goToSlide(index: number) {
+      // 確保索引在有效範圍內
+      if (index < 0) {
+        index = 0;
+      } else if (index > items.length - slidesToShow) {
+        index = items.length - slidesToShow;
+      }
+
+      currentIndex = index;
+
+      // 計算移動距離
+      const itemWidth = carousel.clientWidth / slidesToShow;
+      const translateX = -index * itemWidth;
+
+      // 更新輪播位置
+      carousel.style.transform = `translateX(${translateX}px)`;
+
+      // 更新指示點
+      updateActiveDot();
+    }
+
+    // 更新活動指示點
+    function updateActiveDot() {
+      dots.forEach((dot, i) => {
+        if (i === currentIndex) {
+          dot.classList.add("bg-primary-accent");
+          dot.classList.remove("bg-slate-300");
+        } else {
+          dot.classList.remove("bg-primary-accent");
+          dot.classList.add("bg-slate-300");
+        }
+      });
+    }
+
+    // 前後導航按鈕
+    prevButton.addEventListener("click", () => {
+      goToSlide(currentIndex - 1);
+      stopAutoplay();
+      startAutoplay();
+    });
+
+    nextButton.addEventListener("click", goToNextSlide);
+
+    function goToNextSlide() {
+      goToSlide(currentIndex + 1);
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    // 指示點點擊事件
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        goToSlide(i);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    // 觸摸滑動支持
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoplay();
+      },
+      { passive: true }
+    );
+
+    carousel.addEventListener(
+      "touchend",
+      (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        startAutoplay();
+      },
+      { passive: true }
+    );
+
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      // 如果滑動距離足夠長
+      if (Math.abs(swipeDistance) > 50) {
+        if (swipeDistance > 0) {
+          // 向右滑動，前一張
+          goToSlide(currentIndex - 1);
+        } else {
+          // 向左滑動，後一張
+          goToSlide(currentIndex + 1);
+        }
+      }
+    }
+  }
 </script>
