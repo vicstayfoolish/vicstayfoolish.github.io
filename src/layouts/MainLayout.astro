@@ -299,8 +299,32 @@ const { title, description = "亮亮的知識方舟 - 分享知識與見解的�
       /* 導航和頁頭 */
       .sticky-nav {
         background-color: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+        transition: all 0.3s ease;
+      }
+
+      .nav-link {
+        color: rgb(75, 85, 99);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-link:hover {
+        color: var(--color-primary-accent);
+      }
+
+      .nav-link-special {
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .nav-link-special:hover {
+        transform: translateY(-1px);
       }
 
       /* 頁面頭部標題區 */
@@ -313,40 +337,51 @@ const { title, description = "亮亮的知識方舟 - 分享知識與見解的�
     </style>
   </head>
   <body>
-    <nav class="sticky-nav">
+    <nav class="sticky-nav sticky top-0 z-50 py-2 bg-white/80">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <a
             href="/"
-            class="text-2xl font-bold text-gray-800 hover:text-primary-accent transition-colors"
+            class="text-xl sm:text-2xl font-bold text-gray-800 hover:text-primary-accent transition-colors flex items-center gap-2"
           >
-            <i class="fas fa-book-open mr-2 text-primary-accent"></i>亮亮的知識方舟
+            <i class="fas fa-book-open text-primary-accent"></i>
+            <span>亮亮的知識方舟</span>
           </a>
-          <div class="hidden md:flex items-center space-x-1">
-            <a href="/#psychology" class="nav-link">心理學</a>
-            <a href="/#health" class="nav-link">健康</a>
-            <a href="/#pets" class="nav-link">寵物</a>
-            <a href="/#technology" class="nav-link">科技</a>
-            <a href="/about" class="nav-link">關於我們</a>
+          <div class="hidden md:flex items-center space-x-2">
+            <a href="/#psychology" class="nav-link px-3 py-2 rounded-lg hover:bg-gray-100">
+              <i class="fas fa-brain mr-1 text-sky-600"></i> 心理學
+            </a>
+            <a href="/#health" class="nav-link px-3 py-2 rounded-lg hover:bg-gray-100">
+              <i class="fas fa-heartbeat mr-1 text-rose-500"></i> 健康
+            </a>
+            <a href="/#technology" class="nav-link px-3 py-2 rounded-lg hover:bg-gray-100">
+              <i class="fas fa-microchip mr-1 text-indigo-500"></i> 科技
+            </a>
+            <a href="/#others" class="nav-link px-3 py-2 rounded-lg hover:bg-gray-100">
+              <i class="fas fa-ellipsis-h mr-1 text-gray-500"></i> 其他
+            </a>
           </div>
-          <button id="mobile-menu-button" class="md:hidden focus:outline-none p-2">
-            <i class="fas fa-bars text-2xl text-gray-800"></i>
+          <button
+            id="mobile-menu-button"
+            class="md:hidden focus:outline-none p-2 rounded-full hover:bg-gray-100"
+          >
+            <i class="fas fa-bars text-xl text-gray-800"></i>
           </button>
         </div>
       </div>
       <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg border-t border-gray-200">
-        <a href="/#psychology" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600"
-          >心理學</a
-        >
-        <a href="/#health" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">健康</a
-        >
-        <a href="/#pets" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">寵物</a>
-        <a href="/#technology" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600"
-          >科技</a
-        >
-        <a href="/about" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600"
-          >關於我們</a
-        >
+        <a href="/#psychology" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">
+          <i class="fas fa-brain mr-2 text-sky-600"></i>心理學
+        </a>
+        <a href="/#health" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">
+          <i class="fas fa-heartbeat mr-2 text-rose-500"></i>健康
+        </a>
+        <a href="/#technology" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">
+          <i class="fas fa-microchip mr-2 text-indigo-500"></i>科技
+        </a>
+        <a href="/#others" class="block py-3 px-4 text-base hover:bg-gray-100 text-gray-600">
+          <i class="fas fa-ellipsis-h mr-2 text-gray-500"></i>其他
+        </a>
       </div>
     </nav>
 
@@ -372,10 +407,31 @@ const { title, description = "亮亮的知識方舟 - 分享知識與見解的�
       document.addEventListener("DOMContentLoaded", () => {
         const mobileMenuButton = document.getElementById("mobile-menu-button");
         const mobileMenu = document.getElementById("mobile-menu");
+        const nav = document.querySelector(".sticky-nav");
 
+        // 移動端菜單切換
         if (mobileMenuButton && mobileMenu) {
           mobileMenuButton.addEventListener("click", () => {
             mobileMenu.classList.toggle("hidden");
+          });
+        }
+
+        // 滾動效果
+        if (nav) {
+          let lastScroll = 0;
+          window.addEventListener("scroll", () => {
+            const currentScroll = window.pageYOffset;
+
+            // 滾動超過 100px 時添加陰影效果和背景
+            if (currentScroll > 10) {
+              nav.classList.add("shadow-md", "bg-white/95");
+              nav.classList.remove("bg-white/80");
+            } else {
+              nav.classList.remove("shadow-md", "bg-white/95");
+              nav.classList.add("bg-white/80");
+            }
+
+            lastScroll = currentScroll;
           });
         }
       });

@@ -11,6 +11,7 @@ const knowledgeCollection = defineCollection({
     tag: z.string().optional(),
     icon: z.string().optional(),
     draft: z.boolean().default(false),
+    hidden: z.boolean().default(false), // 添加隱藏屬性
   }),
 });
 

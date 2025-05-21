@@ -1,0 +1,123 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// 獲取所有標記為隱藏的文章
+const hiddenPosts = await getCollection("knowledge", (post) => post.data.hidden === true);
+---
+
+<script>
+  // 驗證邏輯
+  document.addEventListener("DOMContentLoaded", function () {
+    const isAuthenticated = localStorage.getItem("hiddenAccessGranted") === "true";
+    const contentDiv = document.getElementById("hidden-content");
+    const authForm = document.getElementById("auth-form");
+    const errorMessage = document.getElementById("error-message");
+
+    // 如果已經通過認證，顯示內容
+    if (isAuthenticated && contentDiv && authForm) {
+      contentDiv.style.display = "block";
+      authForm.style.display = "none";
+    }
+
+    // 登出按鈕
+    document.getElementById("logout-btn")?.addEventListener("click", function () {
+      localStorage.removeItem("hiddenAccessGranted");
+      window.location.reload();
+    });
+
+    // 密碼提交
+    document.getElementById("password-form")?.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const passwordInput = document.getElementById("password-input") as HTMLInputElement;
+
+      if (passwordInput && passwordInput.value === "0309") {
+        localStorage.setItem("hiddenAccessGranted", "true");
+        if (contentDiv && authForm && errorMessage) {
+          contentDiv.style.display = "block";
+          authForm.style.display = "none";
+          errorMessage.style.display = "none";
+        }
+      } else if (errorMessage) {
+        errorMessage.style.display = "block";
+      }
+    });
+  });
+</script>
+
+<BaseLayout title="隱藏珍寶" description="這裡存放著只有知道密碼的人才能看到的珍貴內容">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">隱藏珍寶</h1>
+
+    <!-- 認證表單 -->
+    <div
+      id="auth-form"
+      class="max-w-md mx-auto bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg"
+    >
+      <p class="mb-4 text-center">這個區域包含特別的內容，需要密碼才能訪問。</p>
+
+      <form id="password-form" class="space-y-4">
+        <div>
+          <label for="password-input" class="block mb-1">請輸入密碼：</label>
+          <input
+            type="password"
+            id="password-input"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 dark:bg-slate-700"
+            required
+          />
+        </div>
+        <p id="error-message" class="text-red-500 text-sm" style="display: none;">
+          密碼錯誤，請重試。
+        </p>
+        <button
+          type="submit"
+          class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2 px-4 rounded-md transition"
+        >
+          確認
+        </button>
+      </form>
+    </div>
+
+    <!-- 隱藏內容 -->
+    <div id="hidden-content" style="display: none;">
+      <div class="flex justify-end mb-6">
+        <button
+          id="logout-btn"
+          class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-1 px-3 rounded-md text-sm transition"
+        >
+          重新驗證
+        </button>
+      </div>
+
+      <p class="text-center mb-8">歡迎進入隱藏區域，這裡的內容只有獲得授權的人才能看到。</p>
+
+      {
+        hiddenPosts.length === 0 ? (
+          <p class="text-center text-gray-500 dark:text-gray-400">目前沒有隱藏內容</p>
+        ) : (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {hiddenPosts.map((post) => (
+              <a
+                href={`/knowledge/${post.slug}`}
+                class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
+                <h2 class="text-xl font-semibold mb-2 text-sky-700 dark:text-sky-300">
+                  {post.data.title}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">{post.data.description}</p>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                  <span>{new Date(post.data.pubDate).toLocaleDateString("zh-TW")}</span>
+                  {post.data.category && (
+                    <span class="ml-4 bg-sky-100 dark:bg-sky-900 text-sky-800 dark:text-sky-200 px-2 py-0.5 rounded-full">
+                      {post.data.category}
+                    </span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

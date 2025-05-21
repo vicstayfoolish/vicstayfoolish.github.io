@@ -1,0 +1,16 @@
+---
+// 基本佈局組件（為隱藏頁面等特殊場景設計）
+import MainLayout from "./MainLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "亮亮的知識方舟 - 分享知識與見解的空間" } = Astro.props;
+---
+
+<MainLayout title={title} description={description}>
+  <slot />
+</MainLayout>
+
