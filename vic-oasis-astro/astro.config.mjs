@@ -6,6 +6,7 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://vicstayfoolish.github.io',
+  base: '/vic-oasis-astro',
   integrations: [
     mdx(),
     tailwind({
