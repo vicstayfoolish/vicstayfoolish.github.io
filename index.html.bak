@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索「無條件愛自己」：一份互動實用指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!--
+        Chosen Palette:
+        Page Background: #FDFCFB (Very light cream)
+        Content Block/Card Background: #FFFFFF (White)
+        Section Separator/Accent Background: #F1F8F7 (Very light mint/teal) or #FFF0E9 (Very light peach)
+        Primary Accent (Headings, CTAs, Key Highlights): #E57373 (Soft Coral Red)
+        Secondary Accent (Icons, Borders, Sub-elements): #81C7D4 (Muted Teal)
+        Tertiary Accent (Tooltips, subtle highlights): #FFB74D (Soft Orange/Amber)
+        Main Text: #37474F (Dark Slate Blue/Grey)
+        Secondary Text/Subtitles: #546E7A (Slightly Lighter Slate Blue/Grey)
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFCFB;
+            color: #37474F;
+            scroll-behavior: smooth;
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(253, 252, 251, 0.95); /* Semi-transparent page background */
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-link {
+            color: #546E7A;
+            transition: color 0.3s, border-bottom-color 0.3s;
+            padding: 0.75rem 0.5rem; /* Adjusted padding for more links */
+            margin: 0 0.25rem; /* Spacing between links */
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #E57373;
+            border-bottom-color: #E57373;
+        }
+        .hero-section {
+            background: linear-gradient(120deg, #81C7D4 0%, #E57373 100%);
+            color: white;
+            padding: 4rem 1.5rem 5rem 1.5rem; /* Increased padding */
+        }
+        .hero-section h1 {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .section-title {
+            color: #37474F;
+            border-bottom: 4px solid #E57373;
+            padding-bottom: 0.75rem;
+            display: inline-block;
+            margin-bottom: 2.5rem; /* Increased margin */
+        }
+        .content-section {
+            padding-top: 3rem; /* For scroll-mt */
+            margin-bottom: 4rem; /* Spacing between sections */
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 12px; /* Softer radius */
+            box-shadow: 0 6px 20px rgba(55, 71, 79, 0.08); /* Softer shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; /* For clean borders with colored top */
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(55, 71, 79, 0.12);
+        }
+        .card-accent-top-coral { border-top: 5px solid #E57373; }
+        .card-accent-top-teal { border-top: 5px solid #81C7D4; }
+        .card-accent-top-amber { border-top: 5px solid #FFB74D; }
+
+        .accordion-button {
+            background-color: #F1F8F7; /* Light mint/teal */
+            color: #37474F;
+            border: 1px solid #D0E0DE;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+        .accordion-button:hover {
+            background-color: #E0F0ED;
+        }
+        .accordion-content {
+            background-color: #FFFFFF;
+            border: 1px solid #D0E0DE;
+            border-top: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 1.5rem;
+        }
+        .accordion-content.open {
+            padding: 1.5rem;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 2px dotted #FFB74D; /* Soft Orange/Amber */
+            cursor: help;
+            font-weight: 500;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: #37474F;
+            color: #FFF9E6;
+            text-align: left;
+            border-radius: 8px;
+            padding: 10px 12px;
+            position: absolute;
+            z-index: 10;
+            bottom: 135%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .highlight-box {
+            background-color: #FFF0E9; /* Very light peach */
+            border-left: 5px solid #E57373; /* Soft Coral Red */
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .highlight-box strong { color: #C65252; } /* Darker Coral for emphasis */
+
+        .action-guide-card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 20px rgba(55, 71, 79, 0.08);
+            margin-bottom: 1.5rem;
+        }
+        .action-guide-card h4 { color: #E57373; }
+        .action-guide-card .icon { color: #81C7D4; }
+
+        .quiz-option {
+            border: 2px solid #B2DFDB; /* Lighter Teal border */
+            transition: background-color 0.2s, border-color 0.2s;
+            border-radius: 8px;
+        }
+        .quiz-option:hover {
+            background-color: #E0F2F1; /* Very light teal on hover */
+        }
+        .quiz-option.selected {
+            background-color: #81C7D4; /* Muted Teal */
+            color: white;
+            border-color: #5A9DA6;
+        }
+        .quiz-option.correct {
+            background-color: #A5D6A7; /* Soft Green */
+            color: #2E7D32; /* Darker Green text */
+            border-color: #66BB6A;
+        }
+        .quiz-option.incorrect {
+            background-color: #EF9A9A; /* Soft Red */
+            color: #C62828; /* Darker Red text */
+            border-color: #E57373;
+        }
+        .btn-primary {
+            background-color: #E57373; /* Soft Coral Red */
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background-color: #D35F5F;
+            transform: translateY(-2px);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 550px; /* Slightly larger */
+            margin: 1.5rem auto;
+            height: 320px;
+            background-color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        ul.custom-list li {
+            padding-left: 1.75em;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        ul.custom-list li::before {
+            content: "\f00c"; /* Font Awesome check icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #81C7D4; /* Muted Teal */
+        }
+        .faq-item {
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .footer {
+            background-color: #37474F; /* Dark Slate Blue/Grey */
+            color: #CFD8DC; /* Light Grey Blue for footer text */
+        }
+        .footer a { color: #FFB74D; text-decoration: underline; }
+        .footer a:hover { color: #FFA726; }
+
+         ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #F1F8F7; }
+        ::-webkit-scrollbar-thumb { background: #A0BDBC; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #81C7D4; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <nav class="sticky-nav">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" class="text-2xl font-bold text-[#37474F] hover:text-[#E57373] transition-colors">
+                    <i class="fas fa-heartbeat mr-2 text-[#E57373]"></i>無條件愛自己指南
+                </a>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#intro" class="nav-link">開場白</a>
+                    <a href="#core-concepts" class="nav-link">核心概念</a>
+                    <a href="#development" class="nav-link">如何形成</a>
+                    <a href="#action-guide" class="nav-link font-bold text-[#E57373]">行動指南</a>
+                    <a href="#challenges" class="nav-link">現實挑戰</a>
+                    <a href="#quiz" class="nav-link">小測驗</a>
+                    <a href="#faq" class="nav-link">FAQ</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden focus:outline-none p-2">
+                    <i class="fas fa-bars text-2xl text-[#37474F]"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg border-t border-gray-200">
+            <a href="#intro" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">開場白</a>
+            <a href="#core-concepts" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">核心概念</a>
+            <a href="#development" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">如何形成</a>
+            <a href="#action-guide" class="block py-3 px-4 text-base hover:bg-gray-100 font-bold text-[#E57373]">行動指南</a>
+            <a href="#challenges" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">現實挑戰</a>
+            <a href="#quiz" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">小測驗</a>
+            <a href="#faq" class="block py-3 px-4 text-base hover:bg-gray-100 text-[#546E7A]">FAQ</a>
+        </div>
+    </nav>
+
+    <header id="intro" class="hero-section text-center content-section">
+        <div class="container mx-auto">
+            <i class="fas fa-gift text-5xl mb-6 opacity-80"></i>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">你，天生就值得被愛！</h1>
+            <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed opacity-90">
+                這是一份專為你準備的互動指南，讓我們一起探索「無條件自我價值」這個神奇的禮物。
+                它能幫助我們活得更快樂、更自在，不再被他人的眼光或一時的成敗所困擾。
+            </p>
+            <a href="#core-summary" class="bg-white text-[#E57373] font-bold py-3 px-10 rounded-full text-lg hover:bg-gray-100 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-rocket mr-2"></i>開始探索旅程
+            </a>
+        </div>
+    </header>
+
+    <section id="core-summary" class="container mx-auto px-4 sm:px-6 lg:px-8 content-section">
+        <h2 class="section-title text-3xl font-bold text-center">核心亮點：為什麼這很重要？</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="highlight-box">
+                <h3 class="text-2xl font-semibold mb-3"><i class="fas fa-key mr-2 text-[#E57373]"></i>解鎖內在平靜的鑰匙</h3>
+                <p class="text-[#546E7A] leading-relaxed">「無條件自我價值」意味著你相信自己本身就有價值，這份價值感穩定且不依賴外在成就或他人評價。擁有它，能讓你更從容面對生活挑戰。</p>
+            </div>
+            <div class="highlight-box">
+                <h3 class="text-2xl font-semibold mb-3"><i class="fas fa-seedling mr-2 text-[#E57373]"></i>滋養健康關係的土壤</h3>
+                <p class="text-[#546E7A] leading-relaxed">當你真正愛自己、肯定自己時，你更能建立真誠、平等的人際關係，而不是在關係中尋求認同或彌補匱乏。</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        <section id="core-concepts" class="content-section">
+            <h2 class="section-title text-3xl font-bold text-center">核心概念：到底什麼是「無條件自我價值」？</h2>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="card p-6 card-accent-top-coral">
+                    <h3 class="text-2xl font-semibold mb-4 text-[#E57373]"><i class="fas fa-puzzle-piece mr-2"></i>它的真實面貌</h3>
+                    <p class="mb-4 leading-relaxed">
+                        想像一下，你是一顆獨一無二的鑽石💎，本身就閃耀著光芒。
+                        「無條件自我價值」 (<span class="tooltip">USW<span class="tooltiptext">英文 Unconditional Self-Worth 的縮寫，指不需要任何條件，你本身就擁有的價值感。</span></span>)
+                        就是你內心深處相信「我，就是有價值的，值得被愛與尊重。」
+                    </p>
+                    <p class="leading-relaxed">這種價值感：</p>
+                    <ul class="custom-list mt-3 text-[#546E7A]">
+                        <li><strong>天生的：</strong>不是靠努力賺來的。</li>
+                        <li><strong>穩定的：</strong>不會因為你考試考差了、工作不順利就消失。</li>
+                        <li><strong>內在的：</strong>來自於你對自己的肯定，而不是別人的稱讚。</li>
+                    </ul>
+                </div>
+                <div class="card p-6 card-accent-top-teal">
+                     <h3 class="text-2xl font-semibold mb-4 text-[#81C7D4]"><i class="fas fa-tags mr-2"></i>相關好朋友</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <strong class="text-lg block text-[#546E7A]"><i class="fas fa-leaf mr-2 text-[#81C7D4]"></i>內在價值感 (ISW):</strong>
+                            <p class="text-sm text-gray-600 leading-normal">更強調這份價值是從你「內心」發出的，是你作為一個「人」本來就有的寶貴特質。</p>
+                        </li>
+                        <li>
+                            <strong class="text-lg block text-[#546E7A]"><i class="fas fa-hand-holding-heart mr-2 text-[#81C7D4]"></i>無條件積極關懷 (UPR):</strong>
+                            <p class="text-sm text-gray-600 leading-normal">心理學家卡爾·羅傑斯提出的，指身邊的人（像父母、老師、朋友）能給你完全的接納和支持，不管你表現如何。這是培養USW的超級養分！</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 card p-6 card-accent-top-amber">
+                <h3 class="text-2xl font-semibold mb-4 text-center text-[#FFB74D]"><i class="fas fa-balance-scale mr-2"></i>USW vs. 自尊 (Self-Esteem)：超級比一比</h3>
+                <p class="text-center mb-6 text-[#546E7A]">「蛤？這兩個不是一樣嗎？」其實差很多喔！讓我們來看看：</p>
+                <div class="chart-container">
+                    <canvas id="uswVsEsteemChart"></canvas>
+                </div>
+                <div class="accordion mt-8">
+                    <button class="accordion-button w-full text-left p-4 rounded-t-lg font-semibold flex justify-between items-center">
+                        <span><i class="fas fa-info-circle mr-2"></i>點我展開詳細比較表</span>
+                        <i class="fas fa-chevron-down transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content p-4 rounded-b-lg">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">特點</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">無條件自我價值 (USW)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">自尊 (Self-Esteem)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 text-[#546E7A]">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium">基礎來源</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-heart mr-2 text-[#E57373]"></i>內在的，「我是誰」</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-medal mr-2 text-[#FFB74D]"></i>外在的，「我做了什麼」</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium">穩定性</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-mountain mr-2 text-[#E57373]"></i>相對穩定，像大山</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-water mr-2 text-[#FFB74D]"></i>容易波動，像天氣</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium">主要影響</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-spa mr-2 text-[#E57373]"></i>深層的內在平靜、情緒韌性</td>
+                                        <td class="px-6 py-4 whitespace-nowrap"><i class="fas fa-chart-line mr-2 text-[#FFB74D]"></i>表面的自信心，易受打擊</td>
+                                    </tr>
+                                     <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium">簡單來說</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">「我本身就很好！」</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">「我因為...所以很好。」</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="mt-4 text-sm text-gray-600">簡單說，USW 是你內心深處對自己的肯定，像房子的地基；而自尊更像是你對自己當下表現的評分，像房子的裝潢，隨時可能改變。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="development" class="content-section">
+            <h2 class="section-title text-3xl font-bold text-center">它是如何形成的？我們的成長故事</h2>
+            <p class="text-center mb-10 max-w-2xl mx-auto text-[#546E7A] leading-relaxed">我們內心的價值感，就像一棵小樹苗，從很小的時候就開始受到周圍環境的影響和灌溉。</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-6 text-center card-accent-top-teal">
+                    <div class="mb-4"><i class="fas fa-baby-carriage text-5xl text-[#81C7D4]"></i></div>
+                    <h3 class="text-xl font-semibold mb-3">搖籃裡的愛：依戀關係</h3>
+                    <p class="text-sm text-gray-600 leading-normal">小時候，如果主要照顧者（通常是爸媽）能給我們足夠的愛、關心和安全感，我們就更容易相信：「我是被愛的，我是重要的。」這就是所謂的<span class="tooltip">安全型依戀<span class="tooltiptext">指嬰幼兒與照顧者間形成的一種穩定、信任的連結。孩子相信照顧者是可依賴的，自己是值得被愛的。</span></span>，是USW的沃土。</p>
+                </div>
+                <div class="card p-6 text-center card-accent-top-coral">
+                    <div class="mb-4"><i class="fas fa-mirror text-5xl text-[#E57373]"></i></div>
+                    <h3 class="text-xl font-semibold mb-3">童年的鏡子：他人反應</h3>
+                    <p class="text-sm text-gray-600 leading-normal">我們怎麼看自己，有一部分是從別人（尤其是重要他人）如何回應我們中學來的。如果他們能欣賞我們的本來樣貌，而不是一直要求我們符合他們的期望，我們會更容易喜歡自己、肯定自己。</p>
+                </div>
+                <div class="card p-6 text-center card-accent-top-amber">
+                    <div class="mb-4"><i class="fas fa-users-cog text-5xl text-[#FFB74D]"></i></div>
+                    <h3 class="text-xl font-semibold mb-3">環境的塑造：文化與教養</h3>
+                    <p class="text-sm text-gray-600 leading-normal">家庭的教養方式（是鼓勵犯錯還是嚴厲指責？）、學校的氛圍、社會文化（例如，是不是過度強調考試成績或外表？），都在不知不覺中影響我們對「什麼才算有價值」的看法。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="action-guide" class="content-section bg-[#F1F8F7] py-12 rounded-xl">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl font-bold text-center text-[#37474F]"><i class="fas fa-magic mr-2 text-[#E57373]"></i>你的「無條件愛自己」行動指南</h2>
+                <p class="text-center mb-10 max-w-3xl mx-auto text-[#546E7A] leading-relaxed text-lg">好消息！就算小時候的養分不太夠，我們長大後還是可以自己灌溉內心的價值樹苗。這是一趟充滿力量的旅程，以下是一些你可以馬上開始嘗試的實用方法：</p>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="action-guide-card card-accent-top-coral">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-hand-holding-heart text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">練習「自我慈悲」：像對待好朋友一樣對待自己</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">當你犯錯、失敗或感覺不好的時候，試著停止內心的自我批評。問問自己：「如果我的好朋友遇到這種情況，我會怎麼對他說？」然後，把這份溫柔和理解用在自己身上。</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 承認自己的痛苦（「我現在感覺很糟」），理解不完美是人之常情（「每個人都會犯錯」），給自己溫暖的鼓勵（「沒關係，我可以再試試」）。</li>
+                            <li><strong>為什麼有效？</strong> 減少自我苛責，提升情緒調節能力，建立更健康的自我關係。</li>
+                        </ul>
+                    </div>
+                    <div class="action-guide-card card-accent-top-teal">
+                         <div class="flex items-center mb-3">
+                            <i class="fas fa-brain text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">挑戰你的「負面自動想法」</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">我們的腦袋有時會冒出一些打擊自己的念頭，像是「我真笨」、「我永遠做不好」。這些常常是習慣性的「自動想法」，不一定是真的！</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 察覺這些想法，然後像偵探一樣問自己：「這個想法有證據嗎？有沒有其他可能性？」試著用更客觀、更鼓勵自己的想法取代它。</li>
+                            <li><strong>為什麼有效？</strong> 打破負面思考循環，建立更正向、現實的自我認知。</li>
+                        </ul>
+                    </div>
+                    <div class="action-guide-card card-accent-top-amber">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-spa text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">練習「正念」：活在當下，不加評判</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">正念就是有意識地、不加評判地專注於當下這一刻的經驗（你的呼吸、身體的感覺、周圍的聲音等）。</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 每天花幾分鐘靜坐，專注呼吸。當念頭飄走，溫柔地把它帶回來。也可以在日常活動中練習，如正念吃飯、正念走路。</li>
+                            <li><strong>為什麼有效？</strong> 幫助我們從紛亂思緒中抽離，減少焦慮，培養對自己和經驗的接納。</li>
+                        </ul>
+                    </div>
+                    <div class="action-guide-card card-accent-top-coral">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-list-check text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">列出你的「價值清單」(不看成就)</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">試著寫下你認為自己擁有的、不依賴外在成就的內在特質和價值。例如：善良、有同理心、好奇、有創意、誠實、堅韌等等。</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 找個安靜的時間，真誠地思考。可以問問信任的朋友，他們欣賞你的哪些特質。</li>
+                            <li><strong>為什麼有效？</strong> 幫助你重新聚焦於內在的、穩定的價值來源，而不是短暫的外在表現。</li>
+                        </ul>
+                    </div>
+                    <div class="action-guide-card card-accent-top-teal">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-user-shield text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">設定健康的「心理界線」</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">學會保護自己的時間、精力和情緒，對不合理的要求或會讓你感到消耗的人事物溫和而堅定地說「不」。</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 了解自己的需求和底線。練習用「我」開頭的句子表達感受和需求，例如「我需要一些獨處的時間」。</li>
+                            <li><strong>為什麼有效？</strong> 尊重自己的需求是愛自己的重要表現，能防止自我價值被他人侵蝕。</li>
+                        </ul>
+                    </div>
+                    <div class="action-guide-card card-accent-top-amber">
+                         <div class="flex items-center mb-3">
+                            <i class="fas fa-users text-3xl icon mr-4"></i>
+                            <h4 class="text-xl font-semibold">連結「滋養型」的社會支持</h4>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-3 leading-normal">花時間與那些真正關心你、支持你、讓你感覺良好的人相處。遠離那些總是打擊你、讓你覺得自己不夠好的人。</p>
+                        <ul class="text-xs text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>怎麼做？</strong> 主動與正向的朋友、家人聯繫。參與讓你感到歸屬感的社群或團體。</li>
+                            <li><strong>為什麼有效？</strong> 健康的人際關係能提供情感支持，映照出我們的價值，是USW的重要外部滋養。</li>
+                        </ul>
+                    </div>
+                </div>
+                 <p class="text-center mt-10 text-md text-[#546E7A]">小提醒：這些練習需要時間和耐心，就像健身一樣，持之以恆就會看到改變！ <i class="fas fa-running ml-1"></i></p>
+            </div>
+        </section>
+
+        <section id="challenges" class="content-section">
+            <h2 class="section-title text-3xl font-bold text-center">現實挑戰：理想與現實的拔河賽</h2>
+            <div class="card p-8 bg-[#FFF9E6] border-l-8 border-[#FFB74D]">
+                <p class="mb-6 text-lg leading-relaxed text-[#546E7A]">在一個常常用「你考幾分？」、「你賺多少錢？」、「你長得怎麼樣？」來評價人的世界裡，要打從心底相信「我無條件就很好」，真的不是一件容易的事！我們可能會遇到這些挑戰：</p>
+                <ul class="space-y-4 text-[#37474F]">
+                    <li class="flex items-start">
+                        <i class="fas fa-balance-scale-right text-2xl mr-4 mt-1 text-[#FFB74D]"></i>
+                        <div>
+                            <h4 class="font-semibold text-lg">社會的「條件式」評價標準</h4>
+                            <p class="text-sm leading-normal">學校、職場、社群媒體，甚至有時連家人朋友，都可能有意無意地傳遞：「你必須達成某些條件（成績好、工作棒、外表美…），才算是有價值、值得被喜歡。」</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-user-check text-2xl mr-4 mt-1 text-[#FFB74D]"></i>
+                        <div>
+                            <h4 class="font-semibold text-lg">不小心把「別人的尺」當成「自己的尺」</h4>
+                            <p class="text-sm leading-normal">我們很容易把外界的標準內化，變成自己心裡評判自己的一把尺，然後常常拿這把尺來打擊自己，覺得自己這裡不夠好、那裡不達標。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-ghost text-2xl mr-4 mt-1 text-[#FFB74D]"></i>
+                        <div>
+                            <h4 class="font-semibold text-lg">害怕失敗的「魔咒」</h4>
+                            <p class="text-sm leading-normal">如果我們的價值感跟表現綁在一起，那我們就會超級害怕失敗！因為失敗好像就等於「我這個人很糟」，這種恐懼會讓我們不敢嘗試、不敢做自己。</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mt-8 highlight-box bg-[#E6F3FF] border-l-5 border-[#81C7D4]">
+                    <strong class="text-lg block mb-2 text-[#334E68]"><i class="fas fa-lightbulb mr-2"></i>破關秘訣：</strong>
+                    <p class="text-[#546E7A] leading-relaxed">關鍵在於練習區分：<strong>「我的核心價值」</strong>（我是誰，我本來就有的美好特質）跟<strong>「我的外在表現」</strong>（我做了什麼事，我的成績或成就）。表現會變動，有好有壞，但你的核心價值是穩定不變的！即使事情搞砸了，你依然是那個值得被愛的你。</p>
+                    <p class="text-xs mt-2 text-gray-600">同時，也要小心別把「無條件愛自己」變成「擺爛」的藉口喔！真正的自我價值，是建立在真誠面對自己、接納不完美，並且願意學習成長的基礎上的。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="content-section">
+            <h2 class="section-title text-3xl font-bold text-center">小測驗：來看看你吸收了多少？</h2>
+            <div class="card p-8 max-w-2xl mx-auto bg-[#F1F8F7] card-accent-top-teal">
+                <div id="quiz-container" class="space-y-6">
+                    </div>
+                <button id="submit-quiz-btn" class="btn-primary font-semibold py-3 px-8 rounded-lg mt-8 w-full text-lg">
+                    <i class="fas fa-paper-plane mr-2"></i>提交答案
+                </button>
+                <div id="quiz-results" class="mt-6 text-center font-semibold text-lg"></div>
+            </div>
+        </section>
+
+        <section id="faq" class="content-section">
+            <h2 class="section-title text-3xl font-bold text-center">常見問題 (FAQ)</h2>
+            <div class="max-w-3xl mx-auto space-y-1">
+                <div class="faq-item">
+                    <button class="accordion-button w-full text-left p-5 rounded-none font-medium flex justify-between items-center text-lg">
+                        <span>Q1: 「無條件愛自己」是不是代表我很自私或自戀？</span>
+                        <i class="fas fa-plus transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-5 pb-0">
+                        <p class="text-gray-700 leading-relaxed py-4">完全不是喔！健康的「無條件自我價值」是向內肯定自己的美好，它讓你更有能力去愛別人、建立健康的關係。而自戀是過度膨脹自我、需要他人不斷肯定，甚至會貶低別人。兩者有本質的區別。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="accordion-button w-full text-left p-5 rounded-none font-medium flex justify-between items-center text-lg">
+                        <span>Q2: 如果我有很多缺點，怎麼可能「無條件」愛自己？</span>
+                        <i class="fas fa-plus transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-5 pb-0">
+                        <p class="text-gray-700 leading-relaxed py-4">「無條件」不代表你認為自己完美無缺，而是接納「完整的你」——包括你的優點和那些你還在努力改進的部分。就像愛一個朋友，你會愛他的全部，而不是只愛他表現好的時候。你可以一邊接納現在的自己，一邊努力讓自己變得更好，這並不矛盾。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="accordion-button w-full text-left p-5 rounded-none font-medium flex justify-between items-center text-lg">
+                        <span>Q3: 培養「無條件自我價值」需要很久嗎？</span>
+                        <i class="fas fa-plus transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-5 pb-0">
+                        <p class="text-gray-700 leading-relaxed py-4">這是一段持續的旅程，沒有速成班。每個人的速度和經歷都不同。重要的是開始練習，並對自己有耐心和慈悲心。每當你選擇用更溫柔、更肯定的方式對待自己，你就在為內心的價值樹苗澆水施肥了。</p>
+                    </div>
+                </div>
+                 <div class="faq-item">
+                    <button class="accordion-button w-full text-left p-5 rounded-none font-medium flex justify-between items-center text-lg">
+                        <span>Q4: 我是不是需要別人的肯定，才能感覺到自己的價值？</span>
+                        <i class="fas fa-plus transform transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-5 pb-0">
+                        <p class="text-gray-700 leading-relaxed py-4">被他人肯定是美好的，但如果你的自我價值「完全依賴」他人的肯定，那就會變得很不穩定。練習「無條件自我價值」的目標之一，就是幫助你從「內在」找到肯定的力量，這樣即使外界的聲音紛擾，你依然能站穩腳跟。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section id="conclusion" class="bg-[#FFF0E9] py-16 content-section">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <i class="fas fa-hands-helping text-5xl mb-6 text-[#E57373]"></i>
+            <h2 class="text-4xl font-bold mb-6 text-[#37474F]">給自己一份最珍貴的禮物</h2>
+            <p class="text-lg md:text-xl text-[#546E7A] max-w-3xl mx-auto leading-relaxed mb-8">
+                親愛的朋友，探索「無條件自我價值」的旅程充滿了學習與成長。請記得，你本身就擁有不可取代的價值，如同夜空中最亮的星辰，無需任何外在的證明。
+            </p>
+            <p class="text-lg md:text-xl text-[#546E7A] max-w-3xl mx-auto leading-relaxed mb-10">
+                願你能帶著這份理解和實用的方法，在生活中溫柔地對待自己，勇敢地做真實的你，活出充滿愛與力量的每一天！
+            </p>
+            <a href="#action-guide" class="btn-primary font-bold py-4 px-10 rounded-full text-lg hover:bg-[#D35F5F] transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-book-open mr-2"></i>再次看看行動指南
+            </a>
+        </div>
+    </section>
+
+
+    <footer class="footer py-10 text-center">
+        <p class="text-sm">&copy; 2025 「無條件愛自己」互動實用指南。內容參考相關學術研究，旨在推廣心理健康與自我成長知識。</p>
+        <p class="text-xs mt-2">本網頁僅供參考，不能取代專業心理諮詢。若有需要，請尋求專業協助。</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinksAll = document.querySelectorAll('.nav-link, #mobile-menu a');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelector('i').classList.toggle('fa-bars');
+            mobileMenuButton.querySelector('i').classList.toggle('fa-times');
+        });
+
+        navLinksAll.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.querySelector('i').classList.add('fa-bars');
+                    mobileMenuButton.querySelector('i').classList.remove('fa-times');
+                }
+                // Active link styling for main nav
+                if(link.closest('nav .hidden')) { // Check if it's a main nav link
+                    document.querySelectorAll('nav .nav-link').forEach(navL => navL.classList.remove('active'));
+                    if(!link.classList.contains('font-bold')){ // Avoid double styling on action guide
+                         // link.classList.add('active'); // This will be handled by scroll listener
+                    }
+                }
+            });
+        });
+
+        // Accordion functionality
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i.fa-chevron-down, i.fa-chevron-up, i.fa-plus, i.fa-minus');
+                const isOpen = content.classList.contains('open');
+
+                // Close all other accordions in the same parent if needed (optional)
+                // button.closest('.space-y-1, .space-y-4').querySelectorAll('.accordion-content.open').forEach(openContent => {
+                //     if (openContent !== content) {
+                //         openContent.classList.remove('open');
+                //         openContent.style.maxHeight = null;
+                //         const otherIcon = openContent.previousElementSibling.querySelector('i');
+                //         if (otherIcon) {
+                //             otherIcon.classList.remove('fa-chevron-up', 'fa-minus');
+                //             otherIcon.classList.add('fa-chevron-down', 'fa-plus');
+                //         }
+                //     }
+                // });
+                
+                content.classList.toggle('open');
+
+                if (content.classList.contains('open')) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    if (icon) {
+                        icon.classList.remove('fa-chevron-down', 'fa-plus');
+                        icon.classList.add('fa-chevron-up', 'fa-minus');
+                    }
+                } else {
+                    content.style.maxHeight = null;
+                    if (icon) {
+                        icon.classList.remove('fa-chevron-up', 'fa-minus');
+                        icon.classList.add('fa-chevron-down', 'fa-plus');
+                    }
+                }
+            });
+        });
+        
+        // Chart.js: USW vs Self-Esteem
+        const ctx = document.getElementById('uswVsEsteemChart');
+        if (ctx) {
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['基礎來源', '穩定性', '主要影響'],
+                    datasets: [{
+                        label: '無條件自我價值 (USW)',
+                        data: [3, 3, 3], 
+                        backgroundColor: 'rgba(229, 115, 115, 0.7)', // Soft Coral Red
+                        borderColor: 'rgba(229, 115, 115, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }, {
+                        label: '自尊 (Self-Esteem)',
+                        data: [1, 1, 2], 
+                        backgroundColor: 'rgba(255, 183, 77, 0.7)', // Soft Orange/Amber
+                        borderColor: 'rgba(255, 183, 77, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value === 1) return '外在/易變';
+                                    if (value === 2) return '中等';
+                                    if (value === 3) return '內在/穩定';
+                                    return '';
+                                },
+                                color: '#546E7A',
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(55, 71, 79, 0.1)'}
+                        },
+                        x: {
+                            ticks: { color: '#546E7A', font: { weight: '500'} },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#37474F', font: { weight: '500'} }
+                        },
+                        tooltip: {
+                            backgroundColor: '#37474F',
+                            titleColor: '#FFF9E6',
+                            bodyColor: '#FFF9E6',
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    const val = context.parsed.y;
+                                    const cat = context.label;
+                                    if (context.dataset.label === '無條件自我價值 (USW)') {
+                                        if (cat === '基礎來源') label += '內在的，源於「我是誰」';
+                                        else if (cat === '穩定性') label += '非常穩定，像大山';
+                                        else if (cat === '主要影響') label += '深層平靜，情緒韌性';
+                                    } else if (context.dataset.label === '自尊 (Self-Esteem)') {
+                                        if (cat === '基礎來源') label += '外在的，基於「我做了什麼」';
+                                        else if (cat === '穩定性') label += '容易波動，像天氣';
+                                        else if (cat === '主要影響') label += '表面自信，易受打擊';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Quiz Data and Functionality
+        const quizData = [
+            {
+                question: "1. 「無條件自我價值」(USW) 最核心的意思是？",
+                options: [
+                    "我的價值完全取決於我的考試成績和工作表現。",
+                    "我天生就是有價值的，不需要外在的成功來證明。",
+                    "只有在我讓每個人都喜歡我的時候，我才值得被愛。",
+                    "自我價值感高的人，一定都很自戀。"
+                ],
+                answer: "我天生就是有價值的，不需要外在的成功來證明。"
+            },
+            {
+                question: "2. 培養「無條件自我價值」的其中一個重要方法「自我慈悲」是指？",
+                options: [
+                    "對自己非常嚴格，一點錯都不能犯。",
+                    "遇到困難時，像對待好朋友一樣溫柔地對待自己。",
+                    "覺得自己比所有人都優秀。",
+                    "完全不在乎別人的感受。"
+                ],
+                answer: "遇到困難時，像對待好朋友一樣溫柔地對待自己。"
+            },
+            {
+                question: "3. 我們的「無條件自我價值」跟「自尊」有什麼不一樣？",
+                options: [
+                    "它們是完全一樣的東西，只是說法不同。",
+                    "USW比較穩定，來自內在；自尊比較容易受外在表現影響而波動。",
+                    "自尊比較重要，USW只是輔助。",
+                    "只有成功人士才有USW，一般人只有自尊。"
+                ],
+                answer: "USW比較穩定，來自內在；自尊比較容易受外在表現影響而波動。"
+            },
+             {
+                question: "4. 面對社會上各種「條件式」的評價，我們應該怎麼辦？",
+                options: [
+                    "完全不管社會標準，我行我素。",
+                    "努力符合所有社會期望，才能得到價值。",
+                    "練習區分「內在核心價值」和「外在行為表現」，肯定核心價值，同時也為表現負責。",
+                    "覺得社會太現實了，放棄與人交流。"
+                ],
+                answer: "練習區分「內在核心價值」和「外在行為表現」，肯定核心價值，同時也為表現負責。"
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const submitQuizBtn = document.getElementById('submit-quiz-btn');
+        const quizResultsDiv = document.getElementById('quiz-results');
+        
+        function loadQuiz() {
+            if (!quizContainer) return;
+            quizContainer.innerHTML = ''; // Clear previous quiz if any
+            quizData.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('mb-8');
+                let optionsHTML = '';
+                q.options.forEach(option => {
+                    optionsHTML += `
+                        <label class="block quiz-option p-4 rounded-lg mb-3 cursor-pointer text-sm hover:shadow-md">
+                            <input type="radio" name="question${index}" value="${option}" class="mr-3 opacity-0 absolute h-0 w-0">
+                            <span class="option-text">${option}</span>
+                        </label>
+                    `;
+                });
+                questionDiv.innerHTML = `
+                    <p class="font-semibold mb-4 text-lg text-[#37474F]">${q.question}</p>
+                    <div id="options${index}" class="space-y-2">${optionsHTML}</div>
+                `;
+                quizContainer.appendChild(questionDiv);
+
+                const optionLabels = questionDiv.querySelectorAll('.quiz-option');
+                optionLabels.forEach(label => {
+                    label.addEventListener('click', () => {
+                        questionDiv.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                        label.classList.add('selected');
+                        label.querySelector('input').checked = true;
+                    });
+                });
+            });
+            submitQuizBtn.textContent = '提交答案';
+            submitQuizBtn.onclick = handleSubmitQuiz; // Use onclick for simplicity here or manage listeners carefully
+            quizResultsDiv.innerHTML = '';
+        }
+        
+        function handleSubmitQuiz() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const selectedOptionInput = quizContainer.querySelector(`input[name="question${index}"]:checked`);
+                const optionsForQuestion = quizContainer.querySelectorAll(`#options${index} .quiz-option`);
+
+                optionsForQuestion.forEach(label => {
+                    label.classList.remove('correct', 'incorrect', 'selected');
+                    const radio = label.querySelector('input');
+                    if (radio.value === q.answer) {
+                        label.classList.add('correct');
+                    }
+                });
+                
+                if (selectedOptionInput) {
+                    const parentLabel = selectedOptionInput.closest('.quiz-option');
+                    if (selectedOptionInput.value === q.answer) {
+                        score++;
+                    } else {
+                        parentLabel.classList.add('incorrect');
+                    }
+                }
+            });
+            quizResultsDiv.innerHTML = `你答對了 ${score} / ${quizData.length} 題！${score === quizData.length ? '太棒了！🥳' : (score >= quizData.length / 2 ? '不錯喔！👍' : '再接再厲！💪')}`;
+            quizResultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            submitQuizBtn.textContent = '重新測驗';
+            submitQuizBtn.onclick = loadQuiz; // Change to reset
+        }
+
+        // Active navigation link highlighting on scroll
+        const sections = document.querySelectorAll('.content-section');
+        const mainNavLinks = document.querySelectorAll('nav .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) { // Adjusted offset
+                    current = section.getAttribute('id');
+                }
+            });
+
+            mainNavLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (href && href.substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+             // Special case for hero section if no other section is active
+            if (current === '' && sections.length > 0 && pageYOffset < sections[0].offsetTop - 100) {
+                 mainNavLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && href === '#intro') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+
+        // Load initial quiz
+        if (quizContainer) { // Ensure quizContainer exists before loading
+             loadQuiz();
+        }
+
+    </script>
+</body>
+</html>
