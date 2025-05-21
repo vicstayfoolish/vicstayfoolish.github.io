@@ -1,0 +1,87 @@
+---
+// 主要佈局組件
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Vic的綠洲 - 分享知識與見解的空間" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content={description}>
+  <title>{title}</title>
+  
+  <!-- 字體與圖標 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  
+  <!-- 全局樣式 -->
+  <style is:global>
+    @import "../styles/global.css";
+  </style>
+</head>
+<body>
+  <nav class="sticky-nav">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/" class="text-2xl font-bold text-main-text hover:text-primary-accent transition-colors">
+          <i class="fas fa-leaf mr-2 text-primary-accent"></i>Vic的綠洲
+        </a>
+        <div class="hidden md:flex items-center space-x-1">
+          <a href="/#psychology" class="nav-link">心理學</a>
+          <a href="/#health" class="nav-link">健康</a>
+          <a href="/#pets" class="nav-link">寵物</a>
+          <a href="/#technology" class="nav-link">科技</a>
+          <a href="/about" class="nav-link">關於綠洲</a>
+        </div>
+        <button id="mobile-menu-button" class="md:hidden focus:outline-none p-2">
+          <i class="fas fa-bars text-2xl text-main-text"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg border-t border-gray-200">
+      <a href="/#psychology" class="block py-3 px-4 text-base hover:bg-gray-100 text-secondary-text">心理學</a>
+      <a href="/#health" class="block py-3 px-4 text-base hover:bg-gray-100 text-secondary-text">健康</a>
+      <a href="/#pets" class="block py-3 px-4 text-base hover:bg-gray-100 text-secondary-text">寵物</a>
+      <a href="/#technology" class="block py-3 px-4 text-base hover:bg-gray-100 text-secondary-text">科技</a>
+      <a href="/about" class="block py-3 px-4 text-base hover:bg-gray-100 text-secondary-text">關於綠洲</a>
+    </div>
+  </nav>
+
+  <slot />
+
+  <footer class="footer py-8 px-4">
+    <div class="container mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <p>&copy; {new Date().getFullYear()} Vic的綠洲 - 保留所有權利</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="/about" class="transition hover:text-white">關於我們</a>
+          <a href="/privacy" class="transition hover:text-white">隱私政策</a>
+          <a href="/terms" class="transition hover:text-white">使用條款</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 導航菜單切換
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,101 @@
+---
+// 知識頁面佈局組件
+import MainLayout from './MainLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+}
+
+const { title, description, category } = Astro.props;
+---
+
+<MainLayout title={`${title} | Vic的綠洲`} description={description}>
+  <header class="header py-12 px-4">
+    <div class="container mx-auto">
+      <h1 class="text-4xl font-bold text-center mb-6">{title}</h1>
+      <p class="text-xl text-center max-w-3xl mx-auto">{description}</p>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-12">
+    <div class="knowledge-content">
+      <slot />
+    </div>
+  </main>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center">
+      <a href="/" class="text-primary-accent hover:underline">
+        <i class="fas fa-arrow-left mr-2"></i>返回首頁
+      </a>
+      <a href={`/#${category}`} class="text-primary-accent hover:underline">
+        返回{category === 'psychology' ? '心理學' : 
+             category === 'health' ? '健康' : 
+             category === 'pets' ? '寵物' : 
+             category === 'technology' ? '科技' : '分類'} 
+        <i class="fas fa-arrow-right ml-2"></i>
+      </a>
+    </div>
+  </div>
+
+  <style is:global>
+    /* 知識頁面專用樣式 */
+    .knowledge-content h2 {
+      @apply text-2xl font-bold mb-4 text-primary-accent;
+      display: flex;
+      align-items: center;
+    }
+    
+    .knowledge-content h2 i {
+      @apply mr-2;
+    }
+    
+    .knowledge-content h3 {
+      @apply text-xl font-semibold mb-3 text-secondary-accent;
+      display: flex;
+      align-items: center;
+    }
+    
+    .knowledge-content h3 i {
+      @apply mr-2;
+    }
+    
+    .knowledge-content p {
+      @apply mb-4;
+    }
+    
+    .knowledge-content ul, .knowledge-content ol {
+      @apply my-4 space-y-2 pl-6;
+    }
+    
+    .knowledge-content ul {
+      @apply list-disc;
+    }
+    
+    .knowledge-content ol {
+      @apply list-decimal;
+    }
+    
+    .knowledge-content li strong {
+      @apply font-semibold;
+    }
+    
+    .knowledge-content .content-card {
+      @apply bg-card-bg rounded-card shadow-md mb-8 p-8;
+    }
+    
+    .knowledge-content .practice-box {
+      @apply bg-accent-bg-1 rounded-lg p-6 mb-6;
+    }
+    
+    .knowledge-content .grid-box {
+      @apply grid md:grid-cols-2 gap-6;
+    }
+    
+    .knowledge-content .info-box {
+      @apply bg-gray-50 p-4 rounded-lg;
+    }
+  </style>
+</MainLayout> 

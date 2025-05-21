@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "「Vic的綠洲」專案的詳細設計規範與視覺風格指南，包含配色、字體等。"
+globs:
+  - "**/*.html"
+  - "**/*.css"
+  - "**/*.js" # 當AI生成或修改這些檔案時，應參考此風格指南
+alwaysApply: false # 或設為 true，如果希望 AI 在編輯任何相關檔案時都強制遵循
+---
+
+# 設計與視覺風格指南：Vic的綠洲
+
+## 1. 整體視覺風格
+- **核心感受：** 清晰、專業、現代，同時兼具親和力與溫暖感。
+- **使用者體驗：** 介面直觀、易於導航、內容易讀、互動友好。
+- **參考標準：** 以「探索『無條件愛自己』」頁面的視覺呈現為重要參考。
+
+## 2. 配色方案 (Color Palette)
+- **頁面背景 (Page Background):** `bg-[#FDFCFB]` (極淺米白)
+- **內容區塊/卡片背景 (Content Block/Card Background):** `bg-white` (純白)
+- **區塊分隔/輔助背景 (Section Separator/Accent Background):** `bg-[#F1F8F7]` (極淺薄荷綠/藍綠) 或 `bg-[#FFF0E9]` (極淺桃色)
+- **主要強調色 (Primary Accent):** `text-[#E57373]` (柔和珊瑚紅)
+- **次要強調色 (Secondary Accent):** `text-[#81C7D4]` (柔和藍綠)
+- **第三強調色 (Tertiary Accent):** `text-[#FFB74D]` (柔和橘/琥珀色)
+- **主要文字 (Main Text):** `text-[#37474F]` (深石板藍灰)
+- **次要文字/副標題 (Secondary Text):** `text-[#546E7A]` (稍淺石板藍灰)
+- **頁尾文字 (Footer Text):** `text-[#CFD8DC]` (淺灰藍)
+- **頁尾連結 (Footer Links):** `text-[#FFB74D]` (強調色，帶底線)
+
+## 3. 字體 (Typography)
+- **主要字體：** 'Noto Sans TC' (繁體中文)，透過 Google Fonts 引入。
+- **字重：** 使用 Tailwind 的 `font-normal`、`font-medium`、`font-bold`。
+- **可讀性：** 使用 Tailwind 的 `text-base`、`leading-relaxed` 等類別確保閱讀舒適度。
+
+## 4. 版面佈局與元素
+- **卡片設計：** 使用 Tailwind 的 `rounded-lg`、`shadow-md` 等類別。
+- **互動元素：** 使用 Astro 組件封裝互動功能，確保一致的視覺風格。
+- **圖示：** 使用 Font Awesome 圖示，配合 Tailwind 的尺寸和顏色類別。
+
+## 5. 組件設計原則
+- **組件化：** 將重複使用的 UI 元素封裝為 Astro 組件。
+- **響應式：** 使用 Tailwind 的響應式類別確保各種螢幕尺寸的適配。
+- **可維護性：** 組件應具有清晰的 props 介面和文檔註釋。

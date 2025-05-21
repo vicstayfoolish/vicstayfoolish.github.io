@@ -1,0 +1,189 @@
+---
+// 引入佈局和組件
+import MainLayout from '../layouts/MainLayout.astro';
+import '../styles/global.css';
+
+// 頁面數據
+const title = "Vic的綠洲 - 分享知識與見解的空間";
+---
+
+<MainLayout title={title}>
+  <!-- 主要內容 -->
+  <main>
+    <!-- 頂部橫幅 -->
+    <section class="header py-20 px-4 text-center">
+      <div class="container mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">歡迎來到 Vic 的綠洲</h1>
+        <p class="text-xl md:text-2xl max-w-3xl mx-auto">一個分享心理學、健康、寵物和科技知識的個人空間</p>
+      </div>
+    </section>
+
+    <!-- 心理學部分 -->
+    <section id="psychology" class="category-section py-16 px-4">
+      <div class="container mx-auto">
+        <h2 class="category-title text-3xl md:text-4xl">心理學知識</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <a href="/psychology/mindfulness-practice" class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-brain text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">心理健康</span>
+              <h3 class="text-xl font-semibold mb-3">正念練習入門指南</h3>
+              <p class="card-description mb-4">學習如何通過正念冥想來減輕壓力，提高專注力，改善整體心理健康。</p>
+              <span class="btn-primary">閱讀更多</span>
+            </div>
+          </a>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-heart-broken text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">人際關係</span>
+              <h3 class="text-xl font-semibold mb-3">情緒智能與人際關係</h3>
+              <p class="card-description mb-4">探索如何通過提高情緒智能來改善你的人際關係和社交互動。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-book-reader text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">自我成長</span>
+              <h3 class="text-xl font-semibold mb-3">認知行為療法基礎</h3>
+              <p class="card-description mb-4">了解認知行為療法的基本原則，以及如何將其應用於日常生活中的挑戰。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 健康部分 -->
+    <section id="health" class="category-section py-16 px-4 bg-accent-bg-1">
+      <div class="container mx-auto">
+        <h2 class="category-title text-3xl md:text-4xl">健康生活</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <a href="/health/healthy-eating-habits" class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-apple-alt text-4xl text-primary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">營養</span>
+              <h3 class="text-xl font-semibold mb-3">健康飲食習慣</h3>
+              <p class="card-description mb-4">探索平衡飲食的基本原則，以及如何在忙碌的生活中培養持久的健康飲食習慣。</p>
+              <span class="btn-primary">閱讀更多</span>
+            </div>
+          </a>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-running text-4xl text-primary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">運動</span>
+              <h3 class="text-xl font-semibold mb-3">居家健身指南</h3>
+              <p class="card-description mb-4">無需設備的有效居家鍛煉方法，幫助你保持活力和健康。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-bed text-4xl text-primary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">睡眠</span>
+              <h3 class="text-xl font-semibold mb-3">優質睡眠的秘訣</h3>
+              <p class="card-description mb-4">改善睡眠質量的實用技巧和策略，幫助你恢復精力並提高日常表現。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 寵物部分 -->
+    <section id="pets" class="category-section py-16 px-4">
+      <div class="container mx-auto">
+        <h2 class="category-title text-3xl md:text-4xl">寵物天地</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <a href="/pets/cat-care-guide" class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-cat text-4xl text-tertiary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">貓咪</span>
+              <h3 class="text-xl font-semibold mb-3">貓咪護理完全指南</h3>
+              <p class="card-description mb-4">從飲食到行為，了解如何為你的貓咪提供最好的照顧和豐富的生活環境。</p>
+              <span class="btn-primary">閱讀更多</span>
+            </div>
+          </a>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-dog text-4xl text-tertiary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">狗狗</span>
+              <h3 class="text-xl font-semibold mb-3">狗狗訓練基礎</h3>
+              <p class="card-description mb-4">適合初次養狗者的基本訓練技巧，建立良好的溝通和行為習慣。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-1 flex items-center justify-center">
+              <i class="fas fa-paw text-4xl text-tertiary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">寵物健康</span>
+              <h3 class="text-xl font-semibold mb-3">寵物常見健康問題</h3>
+              <p class="card-description mb-4">識別和預防常見的寵物健康問題，知道何時需要尋求獸醫的幫助。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 科技部分 -->
+    <section id="technology" class="category-section py-16 px-4 bg-accent-bg-1">
+      <div class="container mx-auto">
+        <h2 class="category-title text-3xl md:text-4xl">科技探索</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-laptop-code text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">編程</span>
+              <h3 class="text-xl font-semibold mb-3">網頁開發入門</h3>
+              <p class="card-description mb-4">現代網頁開發的基礎知識，包括HTML、CSS和JavaScript的入門指南。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-robot text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">人工智能</span>
+              <h3 class="text-xl font-semibold mb-3">AI技術與應用</h3>
+              <p class="card-description mb-4">了解人工智能的基本概念，以及它如何改變我們的日常生活和工作方式。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="h-40 bg-accent-bg-2 flex items-center justify-center">
+              <i class="fas fa-mobile-alt text-4xl text-secondary-accent"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-badge">數碼生活</span>
+              <h3 class="text-xl font-semibold mb-3">數碼極簡主義</h3>
+              <p class="card-description mb-4">如何在數碼時代保持專注和平衡，避免科技過度使用的負面影響。</p>
+              <span class="btn-primary">即將推出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</MainLayout> 

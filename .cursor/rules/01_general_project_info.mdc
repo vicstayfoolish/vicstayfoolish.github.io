@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "專案「Vic的綠洲」的整體背景、目標、部署環境與核心設定。此規則應在所有主要 AI 互動開始時被參考。"
+globs:
+  - "**/*" # 應用於所有檔案，作為通用背景
+alwaysApply: true
+
+# 專案背景與核心設定：Vic的綠洲
+
+## 1. 專案核心目標
+- **名稱：** Vic的綠洲
+- **願景：** 建立一個部署在 **GitHub Pages** 上的高品質、互動式知識體系網站。
+- **內容主題：** 廣泛涵蓋心理學、健康、寵物、情感、運動、科技、社會觀察、雜談等多個分類。
+- **主要協作模式：** 以 Vibe Coding 模式進行，高度依賴您 (Cursor AI) 根據自然語言指令，協助生成 Astro 組件、Tailwind CSS 樣式及組織內容。
+
+## 2. 重要部署背景：GitHub Pages
+- **路徑要求：** 所有生成的檔案路徑（頁面間連結、資源引用等）都 **必須** 使用與 GitHub Pages 環境相容的 **相對路徑**。
+- **首頁位置：** `src/pages/index.astro` 作為網站入口。
+- **知識頁面結構：** 內容存放於 `src/content/[分類名稱]/[主題檔名].md` 路徑下。例如：`src/content/psychology/understanding-self-worth.md`。
+
+## 3. 風格指南快速參考
+- **整體風格：** 清晰、專業、親和、現代、易於導航。
+- **重要參考範例：** 以先前生成的「探索『無條件愛自己』」頁面作為整體視覺風格、互動性和內容品質的基準。
+
+## 4. 預期技術棧
+- Astro (SSG 框架)
+- Tailwind CSS (整合式樣式框架)
+- TypeScript (可選，用於增強型互動功能)
+- Chart.js (用於圖表)
+- Font Awesome (用於圖示)
+- 字體：Noto Sans TC (透過 Google Fonts 引入)
+
+## 5. 內容生成流程概述
+- 知識頁面內容主要源於 Google Gemini Deep Research 的研究報告。
+- 透過您 (Cursor AI) 的能力，將研究報告轉換為 Markdown 格式的內容文件。
+- 使用 Astro 組件和 Tailwind CSS 來實現互動式功能和視覺呈現。

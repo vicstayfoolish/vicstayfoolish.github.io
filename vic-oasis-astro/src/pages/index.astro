@@ -1,0 +1,176 @@
+---
+// 首頁Astro組件
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+// 定義分類
+const categories = [
+  {
+    id: 'psychology',
+    name: '心理學',
+    icon: 'brain',
+    pages: []
+  },
+  {
+    id: 'health',
+    name: '健康',
+    icon: 'heartbeat',
+    pages: []
+  },
+  {
+    id: 'pets',
+    name: '寵物',
+    icon: 'paw',
+    pages: []
+  },
+  {
+    id: 'technology',
+    name: '科技',
+    icon: 'microchip',
+    pages: []
+  }
+];
+
+// 加載內容頁面
+try {
+  // 加載各分類內容
+  const psychologyPages = await getCollection('psychology', ({ data }) => !data.draft);
+  const healthPages = await getCollection('health', ({ data }) => !data.draft);
+  const petsPages = await getCollection('pets', ({ data }) => !data.draft);
+  const technologyPages = await getCollection('technology', ({ data }) => !data.draft);
+  
+  // 將頁面分配到對應分類
+  categories.find(c => c.id === 'psychology').pages = psychologyPages;
+  categories.find(c => c.id === 'health').pages = healthPages;
+  categories.find(c => c.id === 'pets').pages = petsPages;
+  categories.find(c => c.id === 'technology').pages = technologyPages;
+} catch (error) {
+  console.error('加載內容時出錯:', error);
+}
+
+// 示範卡片數據（補充尚未遷移的內容）
+const demoCards = {
+  psychology: [
+    {
+      icon: 'comments',
+      tag: '人際關係',
+      title: '有效溝通的藝術',
+      description: '探索如何透過同理心、積極傾聽和清晰表達，建立更健康、更滿足的人際關係。',
+      url: '#',
+      disabled: true
+    }
+  ],
+  health: [
+    {
+      icon: 'walking',
+      tag: '運動',
+      title: '居家運動指南',
+      description: '不需特殊器材，在家也能有效健身的完整指南，適合各種體能水平的朋友。',
+      url: '#',
+      disabled: true
+    },
+    {
+      icon: 'moon',
+      tag: '生活習慣',
+      title: '改善睡眠質量的10個方法',
+      description: '優質睡眠對健康至關重要，本文介紹科學實證的方法幫助你獲得更好的睡眠。',
+      url: '#',
+      disabled: true
+    }
+  ],
+  pets: [],
+  technology: []
+};
+
+// 頁面數據
+const title = "Vic的綠洲 - 分享知識與見解的空間";
+---
+
+<MainLayout title={title}>
+  <header class="header py-16 px-4">
+    <div class="container mx-auto text-center">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">歡迎來到 Vic 的綠洲</h1>
+      <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed opacity-90">
+        這是一個分享知識與見解的空間，探索各種主題，尋找靈感，滋養心靈
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        {categories.map(category => (
+          <a href={`#${category.id}`} class="bg-white text-primary-accent font-bold py-2 px-6 rounded-full text-lg hover:bg-gray-100 transition duration-300 shadow-lg">
+            <i class={`fas fa-${category.icon} mr-2`}></i>{category.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-12">
+    {categories.map(category => (
+      <section id={category.id} class="category-section">
+        <h2 class="category-title text-3xl font-bold">{category.name}</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* 顯示真實內容集合的卡片 */}
+          {category.pages.length > 0 && 
+            category.pages.map(page => (
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-icon">
+                    <i class={`fas fa-${page.data.icon || category.icon} text-2xl`}></i>
+                  </div>
+                  <span class="card-badge mb-3">{page.data.tag}</span>
+                  <h3 class="text-2xl font-semibold mb-3">{page.data.title}</h3>
+                  <p class="text-secondary-text mb-6 card-description">
+                    {page.data.description}
+                  </p>
+                  <a href={`/${category.id}/${page.slug}`} class="btn-primary">
+                    <i class="fas fa-arrow-right mr-1"></i> 閱讀更多
+                  </a>
+                </div>
+              </div>
+            ))
+          }
+          
+          {/* 示範卡片 - 等待遷移的內容 */}
+          {demoCards[category.id] && demoCards[category.id].map(card => (
+            <div class="card">
+              <div class="card-content">
+                <div class="card-icon">
+                  <i class={`fas fa-${card.icon} text-2xl`}></i>
+                </div>
+                <span class="card-badge mb-3">{card.tag}</span>
+                <h3 class="text-2xl font-semibold mb-3">{card.title}</h3>
+                <p class="text-secondary-text mb-6 card-description">
+                  {card.description}
+                </p>
+                {card.disabled ? 
+                  <span class="btn-primary opacity-50 cursor-not-allowed">
+                    <i class="fas fa-tools mr-1"></i> 敬請期待
+                  </span> :
+                  <a href={card.url} class="btn-primary">
+                    <i class="fas fa-arrow-right mr-1"></i> 閱讀更多
+                  </a>
+                }
+              </div>
+            </div>
+          ))}
+          
+          {/* 如果該分類尚無卡片，顯示提示 */}
+          {(!category.pages.length && (!demoCards[category.id] || demoCards[category.id].length === 0)) && (
+            <div class="col-span-full text-center py-12">
+              <p class="text-xl text-secondary-text italic">
+                <i class="fas fa-pencil-alt mr-2"></i>
+                此分類內容正在創建中，敬請期待...
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    ))}
+  </main>
+</MainLayout>
+
+<script>
+  // 首頁特定的JavaScript可以放在這裡
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('首頁已載入');
+  });
+</script>

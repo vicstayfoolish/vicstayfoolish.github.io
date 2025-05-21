@@ -1,0 +1,254 @@
+/* 
+ * Vic的綠洲 - 組件樣式檔案
+ * 定義全站共用的各種UI元件樣式
+ */
+
+/* ===== 卡片元件 ===== */
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: 0 6px 20px rgba(55, 71, 79, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(55, 71, 79, 0.12);
+}
+
+.card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.card-description {
+  flex-grow: 1;
+  color: var(--secondary-text);
+}
+
+.card-icon {
+  color: var(--primary-accent);
+  background-color: var(--accent-bg-2);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.card-badge {
+  background-color: var(--secondary-accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+/* 卡片頂部邊框色彩變化 */
+.card-accent-top-coral { border-top: 5px solid var(--primary-accent); }
+.card-accent-top-teal { border-top: 5px solid var(--secondary-accent); }
+.card-accent-top-amber { border-top: 5px solid var(--tertiary-accent); }
+
+/* ===== 按鈕 ===== */
+.btn-primary {
+  background-color: var(--primary-accent);
+  color: white;
+  transition: background-color 0.3s, transform 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: var(--button-radius);
+  font-weight: var(--subheading-weight);
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background-color: #D35F5F; /* 深一點的紅色 */
+  transform: translateY(-2px);
+}
+
+/* ===== 導航相關 ===== */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(253, 252, 251, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.nav-link {
+  color: var(--secondary-text);
+  transition: color 0.3s, border-bottom-color 0.3s;
+  padding: 0.75rem 0.5rem;
+  margin: 0 0.25rem;
+  border-bottom: 3px solid transparent;
+  font-weight: var(--subheading-weight);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--primary-accent);
+  border-bottom-color: var(--primary-accent);
+}
+
+/* ===== 分類標題 ===== */
+.category-title {
+  color: var(--main-text);
+  border-bottom: 4px solid var(--primary-accent);
+  padding-bottom: 0.75rem;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+
+.category-section {
+  margin-bottom: 3rem;
+}
+
+/* ===== 手風琴/折疊面板 ===== */
+.accordion-button {
+  background-color: var(--accent-bg-1);
+  color: var(--main-text);
+  border: 1px solid #D0E0DE;
+  transition: background-color 0.3s;
+  font-weight: var(--subheading-weight);
+  padding: 1rem 1.5rem;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.accordion-button:hover {
+  background-color: #E0F0ED;
+}
+
+.accordion-content {
+  background-color: var(--card-bg);
+  border: 1px solid #D0E0DE;
+  border-top: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+  padding: 0 1.5rem;
+}
+
+.accordion-content.open {
+  max-height: 500px;
+  padding: 1.5rem;
+}
+
+/* ===== 提示框 ===== */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 2px dotted var(--tertiary-accent);
+  cursor: help;
+  font-weight: var(--subheading-weight);
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 240px;
+  background-color: var(--main-text);
+  color: #FFF9E6;
+  text-align: left;
+  border-radius: 8px;
+  padding: 10px 12px;
+  position: absolute;
+  z-index: 10;
+  bottom: 135%;
+  left: 50%;
+  margin-left: -120px;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ===== 高亮區塊 ===== */
+.highlight-box {
+  background-color: var(--accent-bg-2);
+  border-left: 5px solid var(--primary-accent);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.highlight-box strong { 
+  color: #C65252; 
+}
+
+/* ===== 行動指南卡片 ===== */
+.action-guide-card {
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  box-shadow: 0 6px 20px rgba(55, 71, 79, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.action-guide-card h4 { 
+  color: var(--primary-accent); 
+}
+
+.action-guide-card .icon { 
+  color: var(--secondary-accent); 
+}
+
+/* ===== 測驗選項 ===== */
+.quiz-option {
+  border: 2px solid #B2DFDB;
+  transition: background-color 0.2s, border-color 0.2s;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+}
+
+.quiz-option:hover {
+  background-color: #E0F2F1;
+}
+
+.quiz-option.selected {
+  background-color: var(--secondary-accent);
+  color: white;
+  border-color: #5A9DA6;
+}
+
+.quiz-option.correct {
+  background-color: #A5D6A7;
+  color: #2E7D32;
+  border-color: #66BB6A;
+}
+
+.quiz-option.incorrect {
+  background-color: #EF9A9A;
+  color: #C62828;
+  border-color: var(--primary-accent);
+}
+
+/* ===== 圖表容器 ===== */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+  margin: 1.5rem auto;
+  height: 320px;
+  background-color: #F8F9FA;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+} 

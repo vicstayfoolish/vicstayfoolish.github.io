@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import KnowledgeLayout from '../../layouts/KnowledgeLayout.astro';
+
+// 動態路由參數
+export async function getStaticPaths() {
+  const petsEntries = await getCollection('pets');
+  return petsEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+// 頁面屬性
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<KnowledgeLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  category="pets"
+>
+  <Content />
+</KnowledgeLayout> 
