@@ -5,7 +5,7 @@ dist/
 
 # 依賴相關
 node_modules/
-package-lock.json
+# package-lock.json # 確保 package-lock.json 被提交
 yarn.lock
 pnpm-lock.yaml
 
