@@ -1,60 +1,65 @@
 import { defineCollection, z } from 'astro:content';
 
-// 定義知識頁面的集合模式
+// 定義 pets 集合的模式
+const petsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(), // 這將字符串轉換為日期對象
+    category: z.string(),
+    tag: z.string().optional(),
+    icon: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// 定義 psychology 集合的模式
+const psychologyCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(), // 這將字符串轉換為日期對象
+    category: z.string(),
+    tag: z.string().optional(),
+    icon: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// 定義 health 集合的模式 (目前可能沒有檔案，但先定義好)
+const healthCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(), // 這將字符串轉換為日期對象
+    category: z.string(),
+    tag: z.string().optional(),
+    icon: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// 定義 technology 集合的模式 (目前可能沒有檔案，但先定義好)
+const technologyCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(), // 這將字符串轉換為日期對象
+    category: z.string(),
+    tag: z.string().optional(),
+    icon: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// 導出集合
 export const collections = {
-  // 心理學分類
-  psychology: defineCollection({
-    type: 'content',
-    schema: z.object({
-      title: z.string(),
-      description: z.string(),
-      tag: z.string(),
-      icon: z.string().default('brain'),
-      pubDate: z.date().optional(),
-      updatedDate: z.date().optional(),
-      draft: z.boolean().default(false),
-    }),
-  }),
-  
-  // 健康分類
-  health: defineCollection({
-    type: 'content',
-    schema: z.object({
-      title: z.string(),
-      description: z.string(),
-      tag: z.string(),
-      icon: z.string().default('heartbeat'),
-      pubDate: z.date().optional(),
-      updatedDate: z.date().optional(),
-      draft: z.boolean().default(false),
-    }),
-  }),
-  
-  // 寵物分類
-  pets: defineCollection({
-    type: 'content',
-    schema: z.object({
-      title: z.string(),
-      description: z.string(),
-      tag: z.string(),
-      icon: z.string().default('paw'),
-      pubDate: z.date().optional(),
-      updatedDate: z.date().optional(),
-      draft: z.boolean().default(false),
-    }),
-  }),
-  
-  // 科技分類
-  technology: defineCollection({
-    type: 'content',
-    schema: z.object({
-      title: z.string(),
-      description: z.string(),
-      tag: z.string(),
-      icon: z.string().default('microchip'),
-      pubDate: z.date().optional(),
-      updatedDate: z.date().optional(),
-      draft: z.boolean().default(false),
-    }),
-  }),
+  'pets': petsCollection,
+  'psychology': psychologyCollection,
+  'health': healthCollection,
+  'technology': technologyCollection,
 };

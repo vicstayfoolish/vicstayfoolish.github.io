@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
-import KnowledgeLayout from '../../layouts/KnowledgeLayout.astro';
+import { getCollection } from "astro:content";
+import KnowledgeLayout from "../../layouts/KnowledgeLayout.astro";
 
 // 動態路由參數
 export async function getStaticPaths() {
-  const technologyEntries = await getCollection('technology');
-  return technologyEntries.map(entry => ({
+  const technologyEntries = await getCollection("technology");
+  return technologyEntries.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
@@ -20,6 +20,8 @@ const { Content } = await entry.render();
   title={entry.data.title}
   description={entry.data.description}
   category="technology"
+  pubDate={entry.data.pubDate}
 >
   <Content />
-</KnowledgeLayout> 
+</KnowledgeLayout>
+

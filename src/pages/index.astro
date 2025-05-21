@@ -1,176 +1,382 @@
 ---
 // 首頁Astro組件
-import MainLayout from '../layouts/MainLayout.astro';
-import { getCollection } from 'astro:content';
+import MainLayout from "../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 
 // 定義分類
-const categories = [
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  pages: CollectionEntry<"psychology" | "health" | "pets" | "technology">[];
+}
+
+const categories: Category[] = [
   {
-    id: 'psychology',
-    name: '心理學',
-    icon: 'brain',
-    pages: []
+    id: "psychology",
+    name: "心理學",
+    icon: "brain",
+    pages: [],
   },
   {
-    id: 'health',
-    name: '健康',
-    icon: 'heartbeat',
-    pages: []
+    id: "health",
+    name: "健康",
+    icon: "heartbeat",
+    pages: [],
   },
   {
-    id: 'pets',
-    name: '寵物',
-    icon: 'paw',
-    pages: []
+    id: "pets",
+    name: "寵物",
+    icon: "paw",
+    pages: [],
   },
   {
-    id: 'technology',
-    name: '科技',
-    icon: 'microchip',
-    pages: []
-  }
+    id: "technology",
+    name: "科技",
+    icon: "microchip",
+    pages: [],
+  },
 ];
+
+// 用於保存最新文章
+let latestArticles: (CollectionEntry<"psychology" | "health" | "pets" | "technology"> & {
+  categoryId: string;
+})[] = [];
 
 // 加載內容頁面
 try {
   // 加載各分類內容
-  const psychologyPages = await getCollection('psychology', ({ data }) => !data.draft);
-  const healthPages = await getCollection('health', ({ data }) => !data.draft);
-  const petsPages = await getCollection('pets', ({ data }) => !data.draft);
-  const technologyPages = await getCollection('technology', ({ data }) => !data.draft);
-  
+  const psychologyPages = await getCollection("psychology", ({ data }) => !data.draft);
+  const healthPages = await getCollection("health", ({ data }) => !data.draft);
+  const petsPages = await getCollection("pets", ({ data }) => !data.draft);
+  const technologyPages = await getCollection("technology", ({ data }) => !data.draft);
+
   // 將頁面分配到對應分類
-  categories.find(c => c.id === 'psychology').pages = psychologyPages;
-  categories.find(c => c.id === 'health').pages = healthPages;
-  categories.find(c => c.id === 'pets').pages = petsPages;
-  categories.find(c => c.id === 'technology').pages = technologyPages;
+  const psychologyCategory = categories.find((c) => c.id === "psychology");
+  const healthCategory = categories.find((c) => c.id === "health");
+  const petsCategory = categories.find((c) => c.id === "pets");
+  const technologyCategory = categories.find((c) => c.id === "technology");
+
+  if (psychologyCategory) psychologyCategory.pages = psychologyPages;
+  if (healthCategory) healthCategory.pages = healthPages;
+  if (petsCategory) petsCategory.pages = petsPages;
+  if (technologyCategory) technologyCategory.pages = technologyPages;
+
+  // 合併所有文章並添加分類ID
+  const allArticles = [
+    ...psychologyPages.map((page) => ({ ...page, categoryId: "psychology" })),
+    ...healthPages.map((page) => ({ ...page, categoryId: "health" })),
+    ...petsPages.map((page) => ({ ...page, categoryId: "pets" })),
+    ...technologyPages.map((page) => ({ ...page, categoryId: "technology" })),
+  ];
+
+  // 按發布日期排序
+  latestArticles = allArticles
+    .sort((a, b) => {
+      const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
+      const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
+      return dateB.getTime() - dateA.getTime(); // 降序排列，最新的在前
+    })
+    .slice(0, 6); // 只取前6篇
 } catch (error) {
-  console.error('加載內容時出錯:', error);
+  console.error("加載內容時出錯:", error);
 }
 
-// 示範卡片數據（補充尚未遷移的內容）
-const demoCards = {
-  psychology: [
-    {
-      icon: 'comments',
-      tag: '人際關係',
-      title: '有效溝通的藝術',
-      description: '探索如何透過同理心、積極傾聽和清晰表達，建立更健康、更滿足的人際關係。',
-      url: '#',
-      disabled: true
-    }
-  ],
-  health: [
-    {
-      icon: 'walking',
-      tag: '運動',
-      title: '居家運動指南',
-      description: '不需特殊器材，在家也能有效健身的完整指南，適合各種體能水平的朋友。',
-      url: '#',
-      disabled: true
-    },
-    {
-      icon: 'moon',
-      tag: '生活習慣',
-      title: '改善睡眠質量的10個方法',
-      description: '優質睡眠對健康至關重要，本文介紹科學實證的方法幫助你獲得更好的睡眠。',
-      url: '#',
-      disabled: true
-    }
-  ],
+// 示範卡片數據（已移除施工中的內容）
+const demoCards: Record<string, any[]> = {
+  psychology: [],
+  health: [],
   pets: [],
-  technology: []
+  technology: [],
 };
 
 // 頁面數據
-const title = "Vic的綠洲 - 分享知識與見解的空間";
+const title = "亮亮的知識方舟 - 分享知識與見解的空間";
+
+// 獲取分類圖標
+function getCategoryIconClass(categoryId: string): string {
+  const category = categories.find((c) => c.id === categoryId);
+  return category ? `fas fa-${category.icon}` : "fas fa-file-alt";
+}
+
+// 獲取分類名稱
+function getCategoryName(categoryId: string): string {
+  const category = categories.find((c) => c.id === categoryId);
+  return category ? category.name : "未分類";
+}
+
+// 格式化日期
+function formatDate(date: Date | string | undefined): string {
+  if (!date) return "未知日期";
+
+  const dateObj = date instanceof Date ? date : new Date(date);
+  if (isNaN(dateObj.getTime())) return "未知日期";
+
+  return dateObj.toLocaleDateString("zh-TW", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 ---
 
 <MainLayout title={title}>
-  <header class="header py-16 px-4">
-    <div class="container mx-auto text-center">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">歡迎來到 Vic 的綠洲</h1>
-      <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed opacity-90">
+  <!-- 更新的頁首區域 - 使用135°漸變角度 -->
+  <header
+    class="relative overflow-hidden py-14 px-4 bg-gradient-to-br from-primary-accent via-[#dd6e8d] to-secondary-accent noise-bg"
+  >
+    <div class="absolute inset-0 bg-pattern opacity-10"></div>
+
+    <div class="container mx-auto text-center relative z-10">
+      <div class="inline-block mb-4 p-2 rounded-full bg-white/20 backdrop-blur-sm">
+        <span
+          class="px-4 py-1.5 rounded-full text-sm font-medium bg-primary-accent/90 text-white shadow-sm"
+        >
+          知識方舟
+        </span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-white tracking-tight">
+        探索 <span class="text-white">亮亮的知識方舟</span>
+      </h1>
+      <p
+        class="text-lg sm:text-xl mb-6 max-w-3xl mx-auto leading-relaxed text-white/90 line-height-relaxed"
+      >
         這是一個分享知識與見解的空間，探索各種主題，尋找靈感，滋養心靈
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        {categories.map(category => (
-          <a href={`#${category.id}`} class="bg-white text-primary-accent font-bold py-2 px-6 rounded-full text-lg hover:bg-gray-100 transition duration-300 shadow-lg">
-            <i class={`fas fa-${category.icon} mr-2`}></i>{category.name}
-          </a>
-        ))}
+      <div class="flex flex-wrap justify-center gap-3">
+        {
+          categories.map((category) => (
+            <a
+              href={`#${category.id}`}
+              class="group bg-white/20 backdrop-blur-sm text-white border border-white/20 font-medium py-2 px-5 rounded-xl hover:bg-primary-accent hover:border-primary-accent hover:text-white transition-all duration-300 shadow-sm hover:shadow-hover transform hover:-translate-y-1"
+            >
+              <i class={`fas fa-${category.icon} mr-2 text-white/90`} />
+              {category.name}
+            </a>
+          ))
+        }
       </div>
     </div>
   </header>
 
-  <main class="container mx-auto px-4 py-12">
-    {categories.map(category => (
-      <section id={category.id} class="category-section">
-        <h2 class="category-title text-3xl font-bold">{category.name}</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* 顯示真實內容集合的卡片 */}
-          {category.pages.length > 0 && 
-            category.pages.map(page => (
-              <div class="card">
-                <div class="card-content">
-                  <div class="card-icon">
-                    <i class={`fas fa-${page.data.icon || category.icon} text-2xl`}></i>
+  <main class="container mx-auto px-4 py-20">
+    <!-- 最新文章區塊 - 使用垂直條替代圓形圖標 -->
+    {
+      latestArticles.length > 0 && (
+        <section class="latest-articles mb-28">
+          <div class="flex flex-col sm:flex-row sm:items-center mb-12">
+            <div class="flex items-center mb-4 sm:mb-0">
+              <div class="w-2 h-10 rounded-md bg-primary-accent" />
+              <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">最新文章</h2>
+            </div>
+            <div class="flex-grow border-t border-slate-300 sm:ml-6" />
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {latestArticles.map((article) => (
+              <a
+                href={`/${article.categoryId}/${article.slug}`}
+                class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
+              >
+                <div class="absolute inset-0 bg-white opacity-90 -z-10" />
+                <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+
+                <div class="p-6 flex flex-col h-full">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                      <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
+                        <i
+                          class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.categoryId)} text-primary-accent`}
+                        />
+                      </div>
+                      <span class="card-badge">{article.data.tag}</span>
+                    </div>
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-main-text">
+                      {getCategoryName(article.categoryId)}
+                    </span>
                   </div>
-                  <span class="card-badge mb-3">{page.data.tag}</span>
-                  <h3 class="text-2xl font-semibold mb-3">{page.data.title}</h3>
-                  <p class="text-secondary-text mb-6 card-description">
-                    {page.data.description}
+
+                  <h3 class="text-xl font-semibold mb-3 text-main-text group-hover:text-primary-accent transition-colors">
+                    {article.data.title}
+                  </h3>
+
+                  <p class="text-secondary-text mb-4 flex-grow text-sm leading-relaxed">
+                    {article.data.description}
                   </p>
-                  <a href={`/${category.id}/${page.slug}`} class="btn-primary">
-                    <i class="fas fa-arrow-right mr-1"></i> 閱讀更多
-                  </a>
+
+                  <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-200">
+                    <span class="text-sm text-secondary-text">
+                      <i class="far fa-calendar-alt mr-1" />
+                      {formatDate(article.data.pubDate)}
+                    </span>
+                    <div class="btn-read-more">
+                      <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {/* 各分類區塊 - 標題風格統一 */}
+    {
+      categories.map((category, index) => (
+        <section id={category.id} class="category-section mb-28">
+          <div
+            class={`relative ${index % 2 === 1 ? "py-16 px-6 -mx-4 sm:-mx-6 md:-mx-8 rounded-2xl overflow-hidden bg-gradient-to-r from-[#f4f7fa] to-[#f7f6f5]" : ""}`}
+          >
+            {index % 2 === 1 && (
+              <>
+                <div class="absolute inset-0 bg-pattern opacity-5 -z-10" />
+              </>
+            )}
+
+            <div class="flex flex-col sm:flex-row sm:items-center mb-12">
+              <div class="flex items-center mb-4 sm:mb-0">
+                <div
+                  class={`w-2 h-10 rounded-md ${
+                    index % 2 === 0 ? "bg-primary-accent" : "bg-secondary-accent"
+                  }`}
+                />
+                <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">{category.name}</h2>
               </div>
-            ))
-          }
-          
-          {/* 示範卡片 - 等待遷移的內容 */}
-          {demoCards[category.id] && demoCards[category.id].map(card => (
-            <div class="card">
-              <div class="card-content">
-                <div class="card-icon">
-                  <i class={`fas fa-${card.icon} text-2xl`}></i>
-                </div>
-                <span class="card-badge mb-3">{card.tag}</span>
-                <h3 class="text-2xl font-semibold mb-3">{card.title}</h3>
-                <p class="text-secondary-text mb-6 card-description">
-                  {card.description}
-                </p>
-                {card.disabled ? 
-                  <span class="btn-primary opacity-50 cursor-not-allowed">
-                    <i class="fas fa-tools mr-1"></i> 敬請期待
-                  </span> :
-                  <a href={card.url} class="btn-primary">
-                    <i class="fas fa-arrow-right mr-1"></i> 閱讀更多
+              <div class="flex-grow border-t border-slate-300 sm:ml-6" />
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* 顯示真實內容集合的卡片 */}
+              {category.pages.length > 0 &&
+                category.pages.map((page) => (
+                  <a
+                    href={`/${category.id}/${page.slug}`}
+                    class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
+                  >
+                    <div class="absolute inset-0 bg-white opacity-90 -z-10" />
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+
+                    <div class="p-6 flex flex-col h-full">
+                      <div class="flex items-center mb-4">
+                        <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
+                          <i
+                            class={`fas fa-${page.data.icon || category.icon} text-primary-accent`}
+                          />
+                        </div>
+                        <span class="card-badge">{page.data.tag}</span>
+                      </div>
+
+                      <h3 class="text-xl font-semibold mb-3 text-main-text group-hover:text-primary-accent transition-colors">
+                        {page.data.title}
+                      </h3>
+
+                      <p class="text-secondary-text mb-4 flex-grow text-sm leading-relaxed">
+                        {page.data.description}
+                      </p>
+
+                      <div class="mt-auto">
+                        <span class="btn-primary">閱讀更多</span>
+                      </div>
+                    </div>
                   </a>
-                }
-              </div>
+                ))}
+
+              {/* 如果該分類尚無卡片，顯示提示 */}
+              {!category.pages.length &&
+                (!demoCards[category.id] || demoCards[category.id].length === 0) && (
+                  <div class="col-span-full">
+                    <div class="rounded-2xl py-16 px-8 text-center border border-slate-200 shadow-sm bg-white">
+                      <i class="fas fa-seedling text-4xl mb-4 text-tertiary-accent opacity-80" />
+                      <p class="text-xl text-main-text">此分類內容正在成長中，敬請期待...</p>
+                      <div class="mt-6 inline-block">
+                        <div class="flex space-x-3">
+                          <span class="animate-pulse delay-75 w-2 h-2 rounded-full bg-tertiary-accent" />
+                          <span class="animate-pulse delay-150 w-2 h-2 rounded-full bg-tertiary-accent" />
+                          <span class="animate-pulse delay-300 w-2 h-2 rounded-full bg-tertiary-accent" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
             </div>
-          ))}
-          
-          {/* 如果該分類尚無卡片，顯示提示 */}
-          {(!category.pages.length && (!demoCards[category.id] || demoCards[category.id].length === 0)) && (
-            <div class="col-span-full text-center py-12">
-              <p class="text-xl text-secondary-text italic">
-                <i class="fas fa-pencil-alt mr-2"></i>
-                此分類內容正在創建中，敬請期待...
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-    ))}
+          </div>
+        </section>
+      ))
+    }
   </main>
 </MainLayout>
 
+<style>
+  .bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* 噪點效果 */
+  .noise-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrgoGxXqkLLjA9O3TXzGYwlauaEQdzgJrbml3Aq3N0lDoOVLP75KUnGrTgvjxJgTzH9+S5Mle9DaQfNi3UvBeLUkSIewmPQxO4WL5Vp0=");
+    opacity: 0.02;
+    pointer-events: none;
+  }
+
+  .card-badge {
+    @apply inline-block px-3 py-1 bg-soft-yellow text-primary-accent rounded-full text-xs font-medium;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center py-2.5 px-5 bg-white border border-primary-accent text-primary-accent rounded-lg text-sm font-medium transition duration-300 hover:bg-primary-accent hover:text-white hover:border-primary-accent;
+  }
+
+  .btn-read-more {
+    @apply inline-flex items-center text-sm text-primary-accent font-medium;
+  }
+
+  /* 卡片懸浮效果增強 */
+  .card {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* 增加行高 */
+  p {
+    line-height: 1.75;
+  }
+
+  /* 光滑過渡效果 */
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+</style>
+
 <script>
   // 首頁特定的JavaScript可以放在這裡
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('首頁已載入');
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("首頁已載入");
+
+    // 平滑滾動到分類區塊
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
+        e.preventDefault();
+        const href = anchor.getAttribute("href");
+        if (!href) return;
+
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
   });
 </script>

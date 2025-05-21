@@ -6,7 +6,7 @@
 
 - 使用 Astro 作為靜態網站生成器
 - 整合 Tailwind CSS 實現現代化設計
-- 支援 Markdown 內容管理
+- 支援 Markdown 內容管理（使用 remark-directive 和 rehype-raw 增強功能）
 - 響應式設計，支援各種裝置
 - 優化的載入速度和 SEO
 
@@ -17,6 +17,8 @@
 - [TypeScript](https://www.typescriptlang.org/) - JavaScript 的超集
 - [Chart.js](https://www.chartjs.org/) - 資料視覺化
 - [Font Awesome](https://fontawesome.com/) - 圖示庫
+- [Remark-directive](https://github.com/remarkjs/remark-directive) - Markdown 增強插件
+- [Rehype-raw](https://github.com/rehypejs/rehype-raw) - 允許在 Markdown 中使用 HTML
 
 ## 📦 安裝
 
@@ -42,10 +44,12 @@ npm run dev
 vic-oasis-astro/
 ├── src/
 │   ├── components/     # Astro 組件
-│   ├── content/        # Markdown 內容
+│   ├── content/        # Markdown 內容（.md 格式）
 │   ├── layouts/        # 頁面佈局
 │   ├── pages/          # 路由頁面
 │   └── styles/         # 全域樣式
+├── docs/              # 原始研究報告和文檔
+├── scripts/           # 工具腳本
 ├── public/            # 靜態資源
 ├── astro.config.mjs   # Astro 配置
 ├── tailwind.config.cjs # Tailwind 配置
@@ -54,7 +58,7 @@ vic-oasis-astro/
 
 ## 📝 內容管理
 
-內容使用 Markdown 格式撰寫，存放在 `src/content` 目錄下，按主題分類：
+內容使用純 Markdown 格式（.md）撰寫，存放在 `src/content` 目錄下，按主題分類：
 
 - `psychology/` - 心理學相關文章
 - `health/` - 健康相關文章
@@ -74,8 +78,9 @@ vic-oasis-astro/
 ## 📚 開發指南
 
 1. **新增內容**
-   - 在 `src/content` 下創建對應分類的 Markdown 文件
+   - 在 `src/content` 下創建對應分類的 Markdown 文件（.md）
    - 使用 Frontmatter 定義文章元數據
+   - HTML 標籤使用標準 `class` 屬性，而非 React 的 `className`
 
 2. **開發組件**
    - 在 `src/components` 下創建可重用的 Astro 組件

@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 @layer components {
   /* 卡片 */
   .card {
-    @apply bg-card-bg rounded-card shadow-lg transition-transform hover:translate-y-[-6px] overflow-hidden h-full flex flex-col;
+    @apply bg-card-bg rounded-card shadow-card transition-transform hover:translate-y-[-6px] overflow-hidden h-full flex flex-col;
   }
 
   .card-content {
@@ -49,7 +49,7 @@ h1, h2, h3, h4, h5, h6 {
 
   /* 導航 */
   .sticky-nav {
-    @apply sticky top-0 z-50 bg-opacity-95 bg-page-bg backdrop-blur-md shadow-sm;
+    @apply sticky top-0 z-50 bg-opacity-95 bg-page-bg backdrop-blur-md shadow-soft;
   }
 
   .nav-link {
@@ -77,4 +77,160 @@ h1, h2, h3, h4, h5, h6 {
   .footer a {
     @apply text-footer-link underline hover:text-[#FFA726];
   }
+}
+
+/* 表單元素樣式 */
+input[type="checkbox"] {
+  @apply rounded;
+  @apply border-gray-300;
+  @apply text-sky-600;
+  @apply focus:ring-sky-500;
+  @apply cursor-pointer;
+}
+
+/* 複選框標籤樣式 */
+label[for] {
+  @apply cursor-pointer;
+  @apply select-none;
+}
+
+/* 表格改進樣式 */
+table {
+  @apply min-w-full;
+  @apply overflow-x-auto;
+  @apply border-collapse;
+  @apply rounded-lg;
+  @apply overflow-hidden;
+  @apply shadow-soft;
+  @apply my-6;
+}
+
+th {
+  @apply bg-table-header;
+  @apply text-left;
+  @apply text-main-text;
+  @apply font-semibold;
+  @apply p-3;
+  @apply border;
+  @apply border-table-border;
+}
+
+td {
+  @apply p-3;
+  @apply border;
+  @apply border-table-border;
+  @apply bg-white;
+}
+
+tr:nth-child(even) td {
+  @apply bg-table-stripe;
+}
+
+/* 注腳樣式 */
+.footnotes {
+  @apply mt-8;
+  @apply pt-6;
+  @apply border-t;
+  @apply border-table-border;
+}
+
+.footnotes h2 {
+  @apply text-lg;
+  @apply font-semibold;
+  @apply mb-4;
+  @apply text-main-text;
+}
+
+.footnotes ol {
+  @apply pl-6;
+  @apply list-decimal;
+}
+
+.footnotes li {
+  @apply mb-2;
+  @apply text-secondary-text;
+}
+
+.footnotes a {
+  @apply text-primary-accent;
+  @apply hover:underline;
+}
+
+/* 警示框和提示框改進樣式 */
+.alert {
+  @apply p-4 rounded-lg mb-4 shadow-soft;
+}
+
+.alert-info {
+  @apply bg-soft-blue border-l-4 border-blue-500;
+}
+
+.alert-warning {
+  @apply bg-soft-yellow border-l-4 border-yellow-500;
+}
+
+.alert-success {
+  @apply bg-soft-green border-l-4 border-green-500;
+}
+
+.alert-danger {
+  @apply bg-soft-pink border-l-4 border-red-500;
+}
+
+.alert .alert-icon {
+  @apply mr-2;
+}
+
+/* 圖片和媒體樣式 */
+img {
+  @apply rounded-lg max-w-full h-auto shadow-soft;
+}
+
+.image-caption {
+  @apply text-sm text-secondary-text text-center mt-2 mb-6;
+}
+
+/* 頁面佈局和間距 */
+.container {
+  @apply px-4 mx-auto;
+  max-width: 1200px;
+}
+
+.section {
+  @apply py-12;
+}
+
+.section-title {
+  @apply text-2xl font-bold mb-6 text-main-text;
+}
+
+/* 鏈接樣式 */
+a {
+  @apply transition-colors duration-200;
+}
+
+/* 代碼和引用樣式 */
+code {
+  @apply bg-soft-purple px-2 py-1 rounded text-sm font-mono;
+}
+
+blockquote {
+  @apply border-l-4 border-secondary-accent bg-soft-blue p-4 rounded-r-lg my-6;
+}
+
+/* 問答區樣式 */
+details {
+  @apply mb-4 rounded-lg overflow-hidden;
+}
+
+summary {
+  @apply bg-soft-blue p-3 cursor-pointer font-medium text-main-text;
+}
+
+details[open] summary {
+  @apply border-b border-gray-200;
+}
+
+details[open] div {
+  @apply p-4 bg-white;
 }
