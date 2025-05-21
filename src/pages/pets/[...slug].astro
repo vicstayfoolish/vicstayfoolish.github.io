@@ -4,11 +4,16 @@ import KnowledgeLayout from '../../layouts/KnowledgeLayout.astro';
 
 // 動態路由參數
 export async function getStaticPaths() {
+  console.log("Fetching entries for 'pets' collection...");
   const petsEntries = await getCollection('pets');
-  return petsEntries.map(entry => ({
+  console.log("Raw 'pets' entries:", JSON.stringify(petsEntries, null, 2));
+
+  const paths = petsEntries.map(entry => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
+  console.log("Generated paths for 'pets':", JSON.stringify(paths, null, 2));
+  return paths;
 }
 
 // 頁面屬性

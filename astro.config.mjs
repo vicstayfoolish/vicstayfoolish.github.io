@@ -6,11 +6,16 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://vicstayfoolish.github.io',
+  // base: '/vic-oasis-astro',
   integrations: [
     mdx(),
     tailwind({
-      // 配置選項
-      configFile: './tailwind.config.cjs',
+      configFile: './tailwind.config.cjs'
     })
-  ]
-}); 
+  ],
+  output: 'static',
+  trailingSlash: 'ignore',
+  build: {
+    format: 'directory'
+  }
+});
