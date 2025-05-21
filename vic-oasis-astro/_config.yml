@@ -1,0 +1,5 @@
+# Disable Jekyll processing
+safe: true
+plugins: []
+markdown: kramdown
+baseurl: "" 
