@@ -1,17 +1,17 @@
 ---
 import { getCollection } from "astro:content";
-import KnowledgeLayout from "../../layouts/KnowledgeLayout.astro";
+import KnowledgeLayout from "../../layouts/KnowledgeLayout.astro"; // 確認佈局檔案路徑是否正確
 
-// 動態路由參數
 export async function getStaticPaths() {
-  const psychologyEntries = await getCollection("psychology");
-  return psychologyEntries.map((entry) => ({
+  const allKnowledgeEntries = await getCollection("knowledge", ({ data }) => {
+    return data.draft !== true; // 過濾掉草稿文章
+  });
+  return allKnowledgeEntries.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
 }
 
-// 頁面屬性
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
@@ -19,9 +19,8 @@ const { Content } = await entry.render();
 <KnowledgeLayout
   title={entry.data.title}
   description={entry.data.description}
-  category="psychology"
+  category={entry.data.category}
   pubDate={entry.data.pubDate}
 >
   <Content />
 </KnowledgeLayout>
-

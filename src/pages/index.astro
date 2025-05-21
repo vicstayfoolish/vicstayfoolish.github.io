@@ -9,70 +9,27 @@ interface Category {
   id: string;
   name: string;
   icon: string;
-  pages: CollectionEntry<"psychology" | "health" | "pets" | "technology">[];
+  // pages: CollectionEntry<"psychology" | "health" | "pets" | "technology">[]; // REMOVED
 }
 
-const categories: Category[] = [
-  {
-    id: "psychology",
-    name: "心理學",
-    icon: "brain",
-    pages: [],
-  },
-  {
-    id: "health",
-    name: "健康",
-    icon: "heartbeat",
-    pages: [],
-  },
-  {
-    id: "pets",
-    name: "寵物",
-    icon: "paw",
-    pages: [],
-  },
-  {
-    id: "technology",
-    name: "科技",
-    icon: "microchip",
-    pages: [],
-  },
+const categoriesData: { id: string; name: string; icon: string; path: string }[] = [
+  { id: "psychology", name: "心理學", icon: "brain", path: "/knowledge/psychology" },
+  { id: "health", name: "健康", icon: "heartbeat", path: "/knowledge/health" },
+  { id: "pets", name: "寵物", icon: "paw", path: "/knowledge/pets" },
+  { id: "technology", name: "科技", icon: "microchip", path: "/knowledge/technology" },
+  { id: "others", name: "其他", icon: "ellipsis-h", path: "/knowledge/others" }, // 新增 others 分類
 ];
 
 // 用於保存最新文章
-let latestArticles: (CollectionEntry<"psychology" | "health" | "pets" | "technology"> & {
-  categoryId: string;
-})[] = [];
+let latestArticles: CollectionEntry<"knowledge">[] = [];
+let allKnowledgeArticles: CollectionEntry<"knowledge">[] = [];
 
 // 加載內容頁面
 try {
-  // 加載各分類內容
-  const psychologyPages = await getCollection("psychology", ({ data }) => !data.draft);
-  const healthPages = await getCollection("health", ({ data }) => !data.draft);
-  const petsPages = await getCollection("pets", ({ data }) => !data.draft);
-  const technologyPages = await getCollection("technology", ({ data }) => !data.draft);
+  allKnowledgeArticles = await getCollection("knowledge", ({ data }) => !data.draft);
 
-  // 將頁面分配到對應分類
-  const psychologyCategory = categories.find((c) => c.id === "psychology");
-  const healthCategory = categories.find((c) => c.id === "health");
-  const petsCategory = categories.find((c) => c.id === "pets");
-  const technologyCategory = categories.find((c) => c.id === "technology");
-
-  if (psychologyCategory) psychologyCategory.pages = psychologyPages;
-  if (healthCategory) healthCategory.pages = healthPages;
-  if (petsCategory) petsCategory.pages = petsPages;
-  if (technologyCategory) technologyCategory.pages = technologyPages;
-
-  // 合併所有文章並添加分類ID
-  const allArticles = [
-    ...psychologyPages.map((page) => ({ ...page, categoryId: "psychology" })),
-    ...healthPages.map((page) => ({ ...page, categoryId: "health" })),
-    ...petsPages.map((page) => ({ ...page, categoryId: "pets" })),
-    ...technologyPages.map((page) => ({ ...page, categoryId: "technology" })),
-  ];
-
-  // 按發布日期排序
-  latestArticles = allArticles
+  // 按發布日期排序最新文章
+  latestArticles = [...allKnowledgeArticles] // 創建副本以避免修改原始陣列
     .sort((a, b) => {
       const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
       const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
@@ -95,14 +52,16 @@ const demoCards: Record<string, any[]> = {
 const title = "亮亮的知識方舟 - 分享知識與見解的空間";
 
 // 獲取分類圖標
-function getCategoryIconClass(categoryId: string): string {
-  const category = categories.find((c) => c.id === categoryId);
+function getCategoryIconClass(categoryId: string | undefined): string {
+  if (!categoryId) return "fas fa-file-alt";
+  const category = categoriesData.find((c) => c.id === categoryId);
   return category ? `fas fa-${category.icon}` : "fas fa-file-alt";
 }
 
 // 獲取分類名稱
-function getCategoryName(categoryId: string): string {
-  const category = categories.find((c) => c.id === categoryId);
+function getCategoryName(categoryId: string | undefined): string {
+  if (!categoryId) return "未分類";
+  const category = categoriesData.find((c) => c.id === categoryId);
   return category ? category.name : "未分類";
 }
 
@@ -146,7 +105,7 @@ function formatDate(date: Date | string | undefined): string {
       </p>
       <div class="flex flex-wrap justify-center gap-3">
         {
-          categories.map((category) => (
+          categoriesData.map((category) => (
             <a
               href={`#${category.id}`}
               class="group bg-white/20 backdrop-blur-sm text-white border border-white/20 font-medium py-2 px-5 rounded-xl hover:bg-primary-accent hover:border-primary-accent hover:text-white transition-all duration-300 shadow-sm hover:shadow-hover transform hover:-translate-y-1"
@@ -176,7 +135,7 @@ function formatDate(date: Date | string | undefined): string {
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestArticles.map((article) => (
               <a
-                href={`/${article.categoryId}/${article.slug}`}
+                href={`/knowledge/${article.slug}`}
                 class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
               >
                 <div class="absolute inset-0 bg-white opacity-90 -z-10" />
@@ -187,13 +146,13 @@ function formatDate(date: Date | string | undefined): string {
                     <div class="flex items-center">
                       <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
                         <i
-                          class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.categoryId)} text-primary-accent`}
+                          class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.data.category)} text-primary-accent`}
                         />
                       </div>
                       <span class="card-badge">{article.data.tag}</span>
                     </div>
                     <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-main-text">
-                      {getCategoryName(article.categoryId)}
+                      {getCategoryName(article.data.category)}
                     </span>
                   </div>
 
@@ -224,86 +183,109 @@ function formatDate(date: Date | string | undefined): string {
 
     {/* 各分類區塊 - 標題風格統一 */}
     {
-      categories.map((category, index) => (
-        <section id={category.id} class="category-section mb-28">
-          <div
-            class={`relative ${index % 2 === 1 ? "py-16 px-6 -mx-4 sm:-mx-6 md:-mx-8 rounded-2xl overflow-hidden bg-gradient-to-r from-[#f4f7fa] to-[#f7f6f5]" : ""}`}
-          >
-            {index % 2 === 1 && (
-              <>
-                <div class="absolute inset-0 bg-pattern opacity-5 -z-10" />
-              </>
-            )}
+      categoriesData.map((category, index) => {
+        const categoryArticles = allKnowledgeArticles
+          .filter((article) => article.data.category === category.id)
+          .sort((a, b) => {
+            const dateA =
+              a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate || 0);
+            const dateB =
+              b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate || 0);
+            return dateB.getTime() - dateA.getTime();
+          })
+          .slice(0, 6); // 每個分類最多顯示6篇
 
-            <div class="flex flex-col sm:flex-row sm:items-center mb-12">
-              <div class="flex items-center mb-4 sm:mb-0">
-                <div
-                  class={`w-2 h-10 rounded-md ${
-                    index % 2 === 0 ? "bg-primary-accent" : "bg-secondary-accent"
-                  }`}
-                />
-                <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">{category.name}</h2>
+        if (categoryArticles.length === 0) return null; // 如果該分類沒有文章，則不渲染該區塊
+
+        return (
+          <section id={category.id} class="category-section mb-28">
+            <div
+              class={`relative ${index % 2 === 1 ? "py-16 px-6 -mx-4 sm:-mx-6 md:-mx-8 rounded-2xl overflow-hidden bg-gradient-to-r from-[#f4f7fa] to-[#f7f6f5]" : ""}`}
+            >
+              {index % 2 === 1 && (
+                <>
+                  <div class="absolute inset-0 bg-pattern opacity-5 -z-10" />
+                </>
+              )}
+
+              <div class="flex flex-col sm:flex-row sm:items-center mb-12">
+                <div class="flex items-center mb-4 sm:mb-0">
+                  <div
+                    class={`w-2 h-10 rounded-md ${
+                      index % 2 === 0 ? "bg-primary-accent" : "bg-secondary-accent"
+                    }`}
+                  />
+                  <h2 class="ml-4 text-3xl sm:text-4xl font-bold text-main-text">
+                    {category.name}
+                  </h2>
+                </div>
+                <div class="flex-grow border-t border-slate-300 sm:ml-6" />
               </div>
-              <div class="flex-grow border-t border-slate-300 sm:ml-6" />
-            </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* 顯示真實內容集合的卡片 */}
-              {category.pages.length > 0 &&
-                category.pages.map((page) => (
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {categoryArticles.map((article) => (
                   <a
-                    href={`/${category.id}/${page.slug}`}
+                    href={`/knowledge/${article.slug}`}
                     class="card group relative overflow-hidden rounded-xl shadow-sm hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col h-full bg-white border border-slate-200"
                   >
                     <div class="absolute inset-0 bg-white opacity-90 -z-10" />
                     <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-accent/5 to-secondary-accent/5 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
 
                     <div class="p-6 flex flex-col h-full">
-                      <div class="flex items-center mb-4">
-                        <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
-                          <i
-                            class={`fas fa-${page.data.icon || category.icon} text-primary-accent`}
-                          />
+                      <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                          <div class="p-3 rounded-full bg-gradient-to-br from-primary-accent/20 to-primary-accent/10 mr-3">
+                            <i
+                              class={`${article.data.icon ? `fas fa-${article.data.icon}` : getCategoryIconClass(article.data.category)} text-primary-accent`}
+                            />
+                          </div>
+                          <span class="card-badge">{article.data.tag}</span>
                         </div>
-                        <span class="card-badge">{page.data.tag}</span>
+                        {/* 分類名稱這裡可以不用再顯示，因為已經在分類區塊標題中了，或者可以保留 */}
+                        {/* <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-main-text">
+                          {getCategoryName(article.data.category)}
+                        </span> */}
                       </div>
 
                       <h3 class="text-xl font-semibold mb-3 text-main-text group-hover:text-primary-accent transition-colors">
-                        {page.data.title}
+                        {article.data.title}
                       </h3>
 
                       <p class="text-secondary-text mb-4 flex-grow text-sm leading-relaxed">
-                        {page.data.description}
+                        {article.data.description}
                       </p>
 
-                      <div class="mt-auto">
-                        <span class="btn-primary">閱讀更多</span>
+                      <div class="flex justify-between items-center mt-auto pt-3 border-t border-slate-200">
+                        <span class="text-sm text-secondary-text">
+                          <i class="far fa-calendar-alt mr-1" />
+                          {formatDate(article.data.pubDate)}
+                        </span>
+                        <div class="btn-read-more">
+                          <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" />
+                        </div>
                       </div>
                     </div>
                   </a>
                 ))}
+              </div>
 
-              {/* 如果該分類尚無卡片，顯示提示 */}
-              {!category.pages.length &&
-                (!demoCards[category.id] || demoCards[category.id].length === 0) && (
-                  <div class="col-span-full">
-                    <div class="rounded-2xl py-16 px-8 text-center border border-slate-200 shadow-sm bg-white">
-                      <i class="fas fa-seedling text-4xl mb-4 text-tertiary-accent opacity-80" />
-                      <p class="text-xl text-main-text">此分類內容正在成長中，敬請期待...</p>
-                      <div class="mt-6 inline-block">
-                        <div class="flex space-x-3">
-                          <span class="animate-pulse delay-75 w-2 h-2 rounded-full bg-tertiary-accent" />
-                          <span class="animate-pulse delay-150 w-2 h-2 rounded-full bg-tertiary-accent" />
-                          <span class="animate-pulse delay-300 w-2 h-2 rounded-full bg-tertiary-accent" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              {/* 查看更多按鈕 - 指向新的分類頁面路徑 */}
+              {allKnowledgeArticles.filter((art) => art.data.category === category.id).length >
+                6 && (
+                <div class="text-center mt-12">
+                  <a
+                    href={category.path}
+                    class="inline-block bg-primary-accent text-white font-medium py-3 px-8 rounded-lg hover:bg-primary-accent/90 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    探索更多 {category.name} 文章
+                    <i class="fas fa-arrow-right ml-2" />
+                  </a>
+                </div>
+              )}
             </div>
-          </div>
-        </section>
-      ))
+          </section>
+        );
+      })
     }
   </main>
 </MainLayout>

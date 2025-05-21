@@ -95,7 +95,9 @@ const categoryName = getCategoryName(category);
   </header>
 
   <main class="container mx-auto px-4 py-20">
-    <div class="knowledge-content bg-white rounded-2xl shadow-card p-8 sm:p-10">
+    <div
+      class="knowledge-content bg-white rounded-2xl shadow-card p-8 sm:p-10 prose dark:prose-dark max-w-none"
+    >
       <slot />
     </div>
   </main>
@@ -125,12 +127,12 @@ const categoryName = getCategoryName(category);
   <style>
     /* 知識頁面專用樣式 */
     .knowledge-content {
-      font-size: 18px;
-      line-height: 1.8;
+      /* font-size: 18px; */ /* 由 prose 控制 */
+      /* line-height: 1.8; */ /* 由 prose 控制 */
     }
 
     /* 更新標題樣式，保持一致性 */
-    .knowledge-content h2 {
+    /* .knowledge-content h2 {
       margin-top: 2.5rem;
       margin-bottom: 1.5rem;
       font-size: 2rem;
@@ -140,10 +142,11 @@ const categoryName = getCategoryName(category);
       display: flex;
       align-items: center;
       padding-bottom: 0.75rem;
-    }
+    } */
 
     /* 使用垂直條樣式 - 與首頁保持一致 */
     .knowledge-content h2::before {
+      /* 保留這個，prose 不會提供 */
       content: "";
       display: inline-block;
       width: 0.5rem;
@@ -154,11 +157,12 @@ const categoryName = getCategoryName(category);
     }
 
     .knowledge-content h2 i {
+      /* 保留這個，用於圖示 */
       margin-right: 0.75rem;
-      font-size: 1.75rem;
+      font-size: 1.75rem; /* 注意：這個字體大小可能會被 prose 的 h2 樣式影響或覆蓋，需要測試 */
     }
 
-    .knowledge-content h3 {
+    /* .knowledge-content h3 {
       margin-top: 2rem;
       margin-bottom: 1rem;
       font-size: 1.5rem;
@@ -167,56 +171,58 @@ const categoryName = getCategoryName(category);
       color: var(--color-secondary-accent);
       display: flex;
       align-items: center;
-    }
+    } */
 
     .knowledge-content h3 i {
+      /* 保留這個，用於圖示 */
       margin-right: 0.75rem;
     }
 
-    .knowledge-content h4 {
+    /* .knowledge-content h4 {
       margin-top: 1.5rem;
       margin-bottom: 1rem;
       font-size: 1.25rem;
       font-weight: 600;
       color: var(--color-text-main);
-    }
+    } */
 
-    .knowledge-content p {
+    /* .knowledge-content p {
       margin-bottom: 1.25rem;
       line-height: 1.8;
-    }
+    } */
 
-    .knowledge-content ul,
+    /* .knowledge-content ul,
     .knowledge-content ol {
       margin-top: 1.25rem;
       margin-bottom: 1.25rem;
-    }
+    } */
 
-    .knowledge-content ul > :not([hidden]) ~ :not([hidden]),
+    /* .knowledge-content ul > :not([hidden]) ~ :not([hidden]),
     .knowledge-content ol > :not([hidden]) ~ :not([hidden]) {
       --tw-space-y-reverse: 0;
       margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
       margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
-    }
+    } */
 
-    .knowledge-content ul,
+    /* .knowledge-content ul,
     .knowledge-content ol {
       padding-left: 2rem;
-    }
+    } */
 
-    .knowledge-content ul {
+    /* .knowledge-content ul {
       list-style-type: disc;
-    }
+    } */
 
-    .knowledge-content ol {
+    /* .knowledge-content ol {
       list-style-type: decimal;
-    }
+    } */
 
-    .knowledge-content li strong {
+    /* .knowledge-content li strong {
       font-weight: 600;
-    }
+    } */
 
     .knowledge-content .content-card {
+      /* 保留 content-card 樣式 */
       margin-bottom: 2.5rem;
       border-radius: 12px;
       background-color: var(--color-bg-card);
@@ -228,6 +234,7 @@ const categoryName = getCategoryName(category);
         transform 0.3s ease,
         box-shadow 0.3s ease;
       border: 1px solid rgb(229, 231, 235);
+      /* 如果 content-card 內的內容也需要排版，應考慮 @apply not-prose; 或單獨處理 */
     }
 
     .knowledge-content .content-card:hover {
@@ -248,10 +255,6 @@ const categoryName = getCategoryName(category);
       z-index: -1;
       border-radius: 12px;
       transition: opacity 0.3s ease;
-    }
-
-    .knowledge-content .content-card:hover::before {
-      opacity: 0.05;
     }
 
     .knowledge-content .practice-box {
@@ -411,13 +414,13 @@ const categoryName = getCategoryName(category);
     }
 
     /* 問答區域美化 */
-    .knowledge-content details {
+    /* .knowledge-content details {
       margin-bottom: 1.5rem;
       border-radius: 0.75rem;
       overflow: hidden;
-    }
+    } */
 
-    .knowledge-content details summary {
+    /* .knowledge-content details summary {
       padding: 1rem 1.25rem;
       background-color: var(--color-soft-blue);
       border-radius: 0.75rem;
@@ -429,19 +432,19 @@ const categoryName = getCategoryName(category);
       align-items: center;
       transition: all 0.2s ease;
       font-size: 1.1rem;
-    }
+    } */
 
-    .knowledge-content details summary:hover {
+    /* .knowledge-content details summary:hover {
       background-color: rgba(227, 242, 253, 0.8);
-    }
+    } */
 
-    .knowledge-content details div {
+    /* .knowledge-content details div {
       padding: 1.25rem;
       background-color: rgb(248, 250, 252);
       border-radius: 0 0 0.75rem 0.75rem;
       margin-top: 2px;
       font-size: 1.05rem;
-    }
+    } */
 
     /* 圖片美化 */
     .knowledge-content img {

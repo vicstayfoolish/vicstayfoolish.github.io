@@ -42,5 +42,8 @@
     "editor.autoIndent": "advanced",
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   }
 } 
